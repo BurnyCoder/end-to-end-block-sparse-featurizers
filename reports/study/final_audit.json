@@ -1,0 +1,234 @@
+{
+  "audited_at_utc": "2026-10-27T13:33:50.092557+00:00",
+  "passed": true,
+  "runs": [
+    {
+      "run": "block_mse_seed100",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 747.6720000000205,
+      "peak_vram_bytes": 701733888,
+      "checkpoint_sha256": "01214abb5e00467f3e4378dd634f0f9839e160f73aad59a97e23701912916503"
+    },
+    {
+      "run": "block_kl_seed100",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 720.6720000000205,
+      "peak_vram_bytes": 701708288,
+      "checkpoint_sha256": "2efa3b8ffe2bd346b179adb120df494e103df104626586526a099c4f297c55ee"
+    },
+    {
+      "run": "block_kl_mse_seed100",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 721.234999999986,
+      "peak_vram_bytes": 696891904,
+      "checkpoint_sha256": "2b528ec65785ae5586c71e7a74f7b07c59cc23f17ec6e134864352bcc990ae7c"
+    },
+    {
+      "run": "scalar_mse_seed100",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2288.7339999999967,
+      "peak_vram_bytes": 733257216,
+      "checkpoint_sha256": "e0db72ce07be6649c1970396050fbea904b7d1b4ef7e41dc47d916f61e278b1f"
+    },
+    {
+      "run": "scalar_kl_seed100",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2284.5780000000086,
+      "peak_vram_bytes": 733231616,
+      "checkpoint_sha256": "edde782f770947080c7e4f5b751bda4309b14728eb58cf7968167356abd2e8d3"
+    },
+    {
+      "run": "block_mse_seed101",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 722.2810000000172,
+      "peak_vram_bytes": 701733888,
+      "checkpoint_sha256": "7cad676be1ea26381fdb36a89d5f98a38d13b4545ee08685ec88e97a2eb3bb4b"
+    },
+    {
+      "run": "block_kl_seed101",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 723.0,
+      "peak_vram_bytes": 701708288,
+      "checkpoint_sha256": "abd9679fd0dd73f9494eb829e7b6749c142e53a0a2f5e23ee64a8ec6d3060828"
+    },
+    {
+      "run": "block_kl_mse_seed101",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 719.3280000000086,
+      "peak_vram_bytes": 696891904,
+      "checkpoint_sha256": "7e06da591ae0cd8170460575fc00491e7399744abe867a0253206050afce0512"
+    },
+    {
+      "run": "scalar_mse_seed101",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2287.0620000000054,
+      "peak_vram_bytes": 733257216,
+      "checkpoint_sha256": "bc2caec4997a20e0d32d4c1d4a12679c533fb316e9ab89097174cd37a9ef0e16"
+    },
+    {
+      "run": "scalar_kl_seed101",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2287.3910000000033,
+      "peak_vram_bytes": 733231616,
+      "checkpoint_sha256": "5a2c882b416928ba52ee495c294499bd9b2334c6ed24f074748916c75ba75a3d"
+    },
+    {
+      "run": "block_mse_seed102",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 722.359999999986,
+      "peak_vram_bytes": 701733888,
+      "checkpoint_sha256": "93473ac234303d6dab8634b3a049fd8d03d32ac0aaf96143646595345dd0c69c"
+    },
+    {
+      "run": "block_kl_seed102",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 721.2340000000258,
+      "peak_vram_bytes": 701708288,
+      "checkpoint_sha256": "1e123b35ea7680ba0f2fd59f8523be6674603e21fe0e08268098e9e2a439f0ce"
+    },
+    {
+      "run": "block_kl_mse_seed102",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 725.3439999999828,
+      "peak_vram_bytes": 696891904,
+      "checkpoint_sha256": "0bf6f3a801fc766b3f3240041743264c47f2d681a47583bfe406d929d63e7f51"
+    },
+    {
+      "run": "scalar_mse_seed102",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2295.0620000000054,
+      "peak_vram_bytes": 733257216,
+      "checkpoint_sha256": "6226b0e65672720ba3fa895562386ebe8072d3194b9a185264d533bfc3dad1b1"
+    },
+    {
+      "run": "scalar_kl_seed102",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2288.8439999999828,
+      "peak_vram_bytes": 733231616,
+      "checkpoint_sha256": "912d1fde29ce49278ab4c717c9e74783bb7069516542d8a4ed6d082b23974645"
+    },
+    {
+      "run": "block_mse_seed103",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 721.5309999999881,
+      "peak_vram_bytes": 701733888,
+      "checkpoint_sha256": "435e9f6b380f0869d0e94ae3a414ab0e0923db5589fc29e779d1be2d216df38e"
+    },
+    {
+      "run": "block_kl_seed103",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 726.7339999999967,
+      "peak_vram_bytes": 701708288,
+      "checkpoint_sha256": "2dc2bbfb5a09c420a20c479576f5f25aac7fccd8246e1e951e698decc4e1eefa"
+    },
+    {
+      "run": "block_kl_mse_seed103",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 722.1570000000065,
+      "peak_vram_bytes": 696891904,
+      "checkpoint_sha256": "01b55cde0d5229f5b1a1d540bdd8d4ac1cbdceaeced1ad7a8af09fc48139d7a0"
+    },
+    {
+      "run": "scalar_mse_seed103",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2289.5,
+      "peak_vram_bytes": 733257216,
+      "checkpoint_sha256": "b1c830164511aedccf56d3dcdd964697ebd0d39ebd68b88ae2241f6c104a2bc5"
+    },
+    {
+      "run": "scalar_kl_seed103",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2286.578999999998,
+      "peak_vram_bytes": 733231616,
+      "checkpoint_sha256": "5bd15b623299ee1ba8d85f2deb27373695c735696e6e3d01579d0ffd153faac6"
+    },
+    {
+      "run": "block_mse_seed104",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 717.3439999999828,
+      "peak_vram_bytes": 701733888,
+      "checkpoint_sha256": "e8720aefb1ce3d452e5b6fc497ec9d6aa00ecea6f79bf1a262fc7bcc7b8c8b38"
+    },
+    {
+      "run": "block_kl_seed104",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 713.0940000000119,
+      "peak_vram_bytes": 701708288,
+      "checkpoint_sha256": "1086f5e511d8a12de21b8e00b857f1ff50778f3e0245c797cade72f75c7361f3"
+    },
+    {
+      "run": "block_kl_mse_seed104",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 702.0309999999881,
+      "peak_vram_bytes": 696891904,
+      "checkpoint_sha256": "61c168f45ca7f3103b944e7028551ef16acd0f7301ca67d3311519c698cdefe1"
+    },
+    {
+      "run": "scalar_mse_seed104",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2227.3120000000054,
+      "peak_vram_bytes": 733257216,
+      "checkpoint_sha256": "1f13ec8aa675f2878deae133ec152745787b3b90d2b01fbad1c98cfa558389f3"
+    },
+    {
+      "run": "scalar_kl_seed104",
+      "updates": 237,
+      "images_seen": 7575,
+      "training_seconds": 2213.296000000002,
+      "peak_vram_bytes": 733231616,
+      "checkpoint_sha256": "ea49d0fea53869935c3ab0c4f089aba1cec5021e9112662d7c09060ae11d2781"
+    }
+  ],
+  "completed_pairs": 5,
+  "test_images": 3875,
+  "split_counts": {
+    "train": 7575,
+    "dev": 1894,
+    "test": 3875
+  },
+  "training_source_revision": "c2adebc158be34482fedeb2efd337ca84171ac89",
+  "total_training_seconds": 33574.37500000003,
+  "maximum_peak_vram_bytes": 733257216,
+  "last_training_completed_utc": "2026-10-27T12:42:54Z",
+  "first_test_evaluation_completed_utc": "2026-10-27T12:43:30Z",
+  "primary_ci95_independent_recomputation": [
+    -0.0032590852531916973,
+    0.008351001277876604
+  ],
+  "checks": [
+    "complete frozen schedule",
+    "equal image exposure",
+    "disjoint duplicate groups",
+    "unchanged teacher and normalization",
+    "pinned source/model revisions",
+    "checkpoint hashes",
+    "identical test images and teacher logits",
+    "independently recomputed forward KL and accuracy",
+    "independently recomputed paired interval",
+    "all training precedes final evaluation"
+  ]
+}

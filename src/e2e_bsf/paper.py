@@ -19,6 +19,8 @@ def write_paper(destination, evidence, markdown_table):
     styles["BodyText"].leading = 14
     styles["BodyText"].spaceAfter = 9
     story = []
+    details = evidence["study_details"]  # Actual allocation, distinct from the configured epoch cap.
+    by_condition = {row["condition"]: row for row in evidence["summaries"]}
 
     def paragraph(text, style="BodyText"):
         """Local: one shared text helper; global: consistent typesetting without duplicated layouts."""
@@ -59,11 +61,11 @@ def write_paper(destination, evidence, markdown_table):
               "new featurizer and classifier procedure.")
     heading("2. Method")
     paragraph("Let H contain the final 196 patch vectors of width 768, excluding CLS and four register tokens. Fit a positional mean "
-              "mu and scalar RMS s on training images. For x=(H-mu)/s, QR produces orthonormal frames D_g. The tied encoder computes "
+              "mu and scalar RMS s on training images. For x=(H-mu)/s, transpose each QR frame to obtain orthonormal rows D_g. The tied encoder computes "
               "z_g=gamma_g x D_g^T, retains the k blocks with largest Euclidean norms, and reconstructs x_hat=sum_g z_g D_g. "
               "Insert H_hat=s x_hat+mu without adding the reconstruction residual. The released code uses an unconstrained learned "
               "gain per block and differentiable QR every forward; these details differ from the paper's shared positive gain and "
-              "periodic projection description. We reuse a single QR result within each forward.")
+              "periodic projection description. We reuse one QR result within each training forward and across batches within each frozen evaluation call [7].")
     paragraph("Pool each activation coordinate by its maximum absolute magnitude over patches. Fit a ten-class multinomial logistic "
               "readout on clean training activations, choosing C in {0.01,0.1,1,10} by development cross-entropy. Freeze the head for "
               "all conditions. With p=softmax(head(H)) and q=softmax(head(H_hat)), L_KL=mean_images sum_classes p(log p-log q). "
@@ -88,9 +90,29 @@ def write_paper(destination, evidence, markdown_table):
               "intervals. Correlated patches are not independent replicates. Small pilot variance samples limit power estimates. "
               "Identity, mean replacement and untrained BSF controls test the bottleneck and establish reference outcomes.")
     config = evidence["config"]
-    paragraph("Recorded configuration: " + escape(str({key: config[key] for key in ("profile", "groups", "block_size", "active", "epochs", "microbatch", "effective_batch")})), "SmallBody")
+    counts = details["split_counts"]
+    probe = details["selected_probe"]
+    paragraph(f"Actual data: {counts['train']:,} training, {counts['dev']:,} development and {counts['test']:,} test images. "
+              f"The selected readout uses C={probe['C']:g}, with development cross-entropy {probe['dev_ce']:.6g} "
+              f"and accuracy {probe['dev_accuracy']:.2%}. Actual training exposure is {details['actual_epochs']} epoch(s) per run; "
+              f"the effective batch is {config['effective_batch']} complete images, using microbatches of {config['microbatch']}.")
     if evidence["schedule"]:
-        paragraph("Frozen schedule: " + escape(str(evidence["schedule"])), "SmallBody")
+        schedule = evidence["schedule"]
+        paragraph(f"The frozen schedule contains seeds {', '.join(map(str, schedule['seeds']))}, all five conditions, and "
+                  f"{schedule['epochs']} common epoch(s). Initial learning rates: " +
+                  "; ".join(f"{name}: {lr:g}" for name, lr in schedule["learning_rates"].items()) + ".")
+        if schedule["exploratory"]:
+            paragraph(f"The pilot calculation requested {schedule['power']['required']} seeds, but only {len(schedule['seeds'])} fit "
+                      "the conservative timing forecast. The allocator first stopped, then a disclosed post-pilot amendment implemented "
+                      "the planned exploratory fallback before any main run or test evaluation. "
+                      f"Pilot-estimated power at five seeds is {schedule['power']['power_at_five']:.1%}, below the 80% target. "
+                      "The original deadline was retained; no additional exposure was added when execution was faster than forecast. "
+                      "One epoch limits convergence claims. The forecast remains unchanged in the published schedule.")
+        paragraph("Training source revision: " + escape(schedule["source_revision"]) + ". Model and implementation pins, "
+                  "the complete allocation, split hashes and the original failure record are linked from the repository.", "SmallBody")
+    paragraph(f"Measured training across all reported runs totaled {details['total_training_seconds'] / 3600:.3f} hours. "
+              f"Peak PyTorch-allocated VRAM was {details['peak_vram_bytes'] / 2**20:.1f} MiB; this excludes other applications and "
+              "CUDA allocations outside PyTorch. Preparation, evaluation and reporting are separate from this sum.")
     story.append(PageBreak())
     heading("4. Results and claims")
     paragraph(escape(evidence["narrative"]))
@@ -108,23 +130,54 @@ def write_paper(destination, evidence, markdown_table):
     story.append(Spacer(1, 12))
     for name, row in evidence["controls"].items():
         paragraph(f"Control {escape(name)}: KL {row['kl']:.6g} nats/image, accuracy {row['accuracy']:.2%}, NMSE {row['nmse']:.6g}.", "SmallBody")
+    if "block_kl" in by_condition and "block_mse" in by_condition:
+        local, proposed = by_condition["block_mse"], by_condition["block_kl"]
+        paragraph(f"Block KL's mean divergence is {100 * (1 - proposed['kl'] / local['kl']):.2f}% lower than block MSE's, "
+                  f"while normalized reconstruction error is {100 * (proposed['nmse'] / local['nmse'] - 1):.2f}% higher. "
+                  f"Both have {local['parameters']:,} trainable parameters. Accuracy differences are secondary outcomes: "
+                  "training matched the teacher distributions and did not optimize held-out class labels. A higher observed "
+                  "accuracy than the teacher does not demonstrate broad representation preservation.")
+    scalar = evidence["secondary_scalar"]
+    if scalar.get("ci95"):
+        paragraph(f"Secondary scalar local-minus-KL difference: {scalar['mean_improvement']:.6g} nats/image, "
+                  f"with paired seed interval [{scalar['ci95'][0]:.6g}, {scalar['ci95'][1]:.6g}]. "
+                  "This is a descriptive secondary comparison without multiplicity correction. "
+                  f"Scalar models have {by_condition['scalar_kl']['parameters']:,} parameters, including their additional per-block gains.")
+    heading("Paired primary measurements")
+    for row in evidence["primary"]["per_seed"]:
+        local_ci, proposed_ci = row["local_image_ci95"], row["proposed_image_ci95"]
+        paragraph(f"Seed {row['seed']}: local KL {row['local_kl']:.6g}; proposed KL {row['proposed_kl']:.6g}; "
+                  f"difference {row['improvement']:+.6g}. " +
+                  (f"Image-group 95% intervals: local [{local_ci[0]:.6g}, {local_ci[1]:.6g}], "
+                   f"proposed [{proposed_ci[0]:.6g}, {proposed_ci[1]:.6g}]." if local_ci and proposed_ci else ""), "SmallBody")
+    paragraph("Image-group intervals use 2,000 percentile bootstrap resamples, conditional on each trained model. "
+              "They do not replace the paired training-seed interval and do not pool patches as independent observations.", "SmallBody")
     figure("comparison.png", "Figure 1. Measured held-out output fidelity and patch reconstruction. Seed error bars appear only when more than one seed is available; their absence is not evidence of certainty.")
-    figure("training.png", "Figure 2. All displayed completed runs' training-batch KL against images seen. Batch fluctuations are retained; no post-hoc smoothing or favorable epoch selection is used.")
-    figure("maps.png", "Figure 3. Algorithmically selected development feature maps for fixed examples. Maps are normalized separately to unit spatial L2 norm. Feature indices differ across independently fitted dictionaries; no semantic correspondence is assumed.")
+    figure("paired_effects.png", "Figure 2. All paired primary effects. The mean's 95% seed interval is shown when estimable. Positive values favor KL; zero denotes no improvement.")
+    figure("training.png", "Figure 3. All completed runs' training-batch KL against images seen. Panels share a linear scale. Batch fluctuations are retained; no smoothing or favorable epoch selection is used.", width=5.6 * inch)
+    figure("maps.png", "Figure 4. Algorithmically selected development feature maps for fixed examples. Maps are normalized separately to unit spatial L2 norm. Feature indices differ across independently fitted dictionaries; no semantic correspondence is assumed.")
     heading("5. Interventions and geometry")
     paragraph("Eight blocks are ranked by development energy. For fixed test examples, remove the strongest selected block, remove a "
               "random active block among the eight closest-energy alternatives, or replace that block's complete patch code with a "
               "predetermined same-class/other-class donor. These are causal interventions on the composite classifier. Changes in KL "
               "measure behavior under these interventions and do not show that the block encodes the class or another semantic factor. "
-              "Complete per-example energies, donors and outputs accompany the report.")
+              "Complete per-example energies, donors and outputs accompany the report. Matching is approximate. A development-selected "
+              "block may be inactive on a fixed target while the random alternative is active; these targets are retained and reported.")
     for diagnostic in evidence["diagnostics"]:
         rows = diagnostic["interventions"]
         if rows:
             values = {name: sum(row["kl"][name] - row["kl"]["baseline"] for row in rows) / len(rows)
                       for name in ("remove_selected", "remove_random_matched", "swap_same_class", "swap_other_class")}
             compact = "; ".join(f"{name}: {value:.5g}" for name, value in values.items())
-            paragraph(escape(diagnostic["condition"]) + f", seed {diagnostic['seed']}, {len(rows)} examples: " + escape(compact) + " (mean KL change).", "SmallBody")
+            inactive = sum(row["selected_energy"] == 0 for row in rows)
+            paragraph(escape(diagnostic["condition"]) + f", seed {diagnostic['seed']}, {len(rows)} examples ({inactive} inactive selected blocks): " + escape(compact) + " (mean KL change).", "SmallBody")
     heading("6. Discussion, limitations and implications")
+    if "block_kl" in by_condition and "block_mse" in by_condition:
+        paragraph(f"Block local-MSE versus KL conditional stable rank is {local['stable_rank']:.3f} versus {proposed['stable_rank']:.3f}; "
+                  f"normalized-map total variation is {local['map_tv']:.3f} versus {proposed['map_tv']:.3f}, and Dirichlet energy "
+                  f"is {local['map_dirichlet']:.3f} versus {proposed['map_dirichlet']:.3f}. These are descriptive geometry diagnostics. "
+                  "The readout objective did not preserve the local-MSE solution's reconstruction or spatial smoothness. "
+                  "A positive, zero or negative removal/swap effect cannot identify semantic correspondence between independently trained blocks.")
     paragraph("A ten-class softmax constrains at most nine independent logit contrasts per image. Output preservation can therefore "
               "coexist with poor reconstruction, altered spatial maps or discarded information. This study does not test broad DINO "
               "transfer, segmentation, depth or diffusion behavior. The fixed probe and pooling define the measured function. "

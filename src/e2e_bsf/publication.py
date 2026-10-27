@@ -13,6 +13,10 @@ from huggingface_hub import HfApi
 from .io import load_checkpoint, read_json, write_json, digest
 from .logging_utils import log_event
 
+BUNDLE_FILES = ("model.safetensors", "config.json", "manifest.json", "duplicate_audit.json", "teacher.json",
+                "study_schedule.json", "study_status.json", "pilot.json", "metrics.json", "test_predictions.npz",
+                "history.jsonl", "diagnostics.json", "run.json", "GOODFIRE_LICENSE", "LICENSE", "README.md")
+
 
 def stage_bundle(config, checkpoint):
     """Local: export weights without an executable pickle; global: avoid shipping raw inputs/secrets."""
@@ -29,7 +33,7 @@ def stage_bundle(config, checkpoint):
                 "epoch", "updates", "status")}
     metadata.update(pooling="absolute_max", weights_sha256=digest(stage / "model.safetensors"))
     write_json(stage / "config.json", metadata)
-    for filename in ("manifest.json", "duplicate_audit.json", "teacher.json", "study_schedule.json"):
+    for filename in ("manifest.json", "duplicate_audit.json", "teacher.json", "study_schedule.json", "study_status.json", "pilot.json"):
         source = Path(config.root) / filename  # Public image identities and fitted-selection metadata.
         if source.exists():
             shutil.copy2(source, stage / filename)  # Reproduction needs assignments, not just their digest.
@@ -41,12 +45,16 @@ def stage_bundle(config, checkpoint):
             shutil.copy2(source, stage / filename)
     shutil.copy2("vendor/goodfire/LICENSE", stage / "GOODFIRE_LICENSE")
     shutil.copy2("LICENSE", stage / "LICENSE")
+    report = Path("reports") / ("smoke" if config.profile == "smoke" else "study") / "results.json"
+    evidence = read_json(report) if report.exists() else None
+    scope = (evidence["label"] + " " + evidence["narrative"]) if evidence else "Interpret this individual artifact without an aggregate effectiveness claim."
     card = ("---\nlanguage: en\nlicense: mit\ntags:\n- sparse-autoencoder\n- interpretability\n- dinov3\n- block-sparsity\n"
             "base_model: facebook/dinov3-vitb16-pretrain-lvd1689m\n---\n\n"
             f"# {state['condition']} / seed {state['seed']}\n\n"
             "Grassmannian block-sparse featurizer trained from scratch for a fixed DINOv3/Imagenette patch classifier. "
             f"Profile: **{config.profile}**; completed epochs: **{state['epoch']}**. "
-            "A smoke artifact is an engineering demonstration and supplies no confirmatory scientific claim.\n\n"
+            "Scalar artifacts are tied signed width-one featurizers, not conventional ReLU SAEs.\n\n"
+            f"**Study-level interpretation:** {scope}\n\n"
             f"Measured held-out KL: **{metrics['kl']:.8g} nats/image**; accuracy: **{metrics['accuracy']:.4%}**; "
             f"normalized patch MSE: **{metrics['nmse']:.8g}**. Full metrics and per-image logits accompany this model.\n\n"
             "## Use\n\nInstall the [project](https://github.com/BurnyCoder/end-to-end-block-sparse-featurizers) "
@@ -91,7 +99,8 @@ def publish(config, logger):
         stage = stage_bundle(config, summary.parent / "checkpoint.pt")
         repo = f"{account}/e2e-bsf-dinov3-imagenette-{config.profile}-{summary.parent.name.replace('_', '-')}"
         api.create_repo(repo_id=repo, repo_type="model", exist_ok=True, private=False)
-        api.upload_folder(repo_id=repo, folder_path=stage, commit_message="Publish measured BSF weights, readout, provenance and outputs")
+        api.upload_folder(repo_id=repo, folder_path=stage, allow_patterns=list(BUNDLE_FILES),
+                          commit_message="Publish measured BSF weights, readout, provenance and outputs")  # Explicit Hub allowlist excludes incidental files.
         api.add_collection_item(collection_slug=collection.slug, item_id=repo, item_type="model", exists_ok=True)
         records.append({"repository": repo, "url": f"https://huggingface.co/{repo}"})
         write_json(root / "publication.json", {"collection": collection.url, "models": records})
