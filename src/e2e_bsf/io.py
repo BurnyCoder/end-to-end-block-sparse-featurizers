@@ -8,6 +8,7 @@ import hashlib  # Bind files to their exact contents.
 import json  # Human-readable metadata is the source of truth.
 from pathlib import Path  # Use platform-neutral paths.
 import subprocess  # Record the current source revision without shell interpolation.
+import time  # Bounded retries handle transient Windows scanner/share locks.
 import torch  # Persist tensor-only checkpoints.
 
 
@@ -23,7 +24,23 @@ def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)  # Create only requested output folders.
     temporary = path.with_suffix(path.suffix + ".tmp")  # Same filesystem for atomic replace.
     temporary.write_text(json.dumps(value, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-    temporary.replace(path)  # Readers see either the previous or complete new document.
+    atomic_replace(temporary, path)  # Readers see either the previous or complete new document.
+
+
+def atomic_replace(source, destination):
+    """Retry Windows sharing/access locks, retaining atomic replacement and bounded failure.
+
+    Local: scanners can briefly hold files; global: progress must remain recoverable.
+    https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw
+    """
+    for attempt in range(7):  # Less than 1.6 seconds total backoff, then preserve the real error.
+        try:
+            Path(source).replace(destination)
+            return
+        except PermissionError as error:
+            if getattr(error, "winerror", None) not in (5, 32) or attempt == 6:
+                raise  # Do not mask genuine permissions or platform-independent failures.
+            time.sleep(0.025 * 2 ** attempt)
 
 
 def read_json(path):
@@ -37,7 +54,7 @@ def save_checkpoint(path, state):
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")  # Incomplete writes are never selected as checkpoints.
     torch.save(state, temporary)  # State contains tensors and ordinary primitive containers.
-    temporary.replace(path)
+    atomic_replace(temporary, path)
 
 
 def load_checkpoint(path, device="cpu"):
