@@ -1,7 +1,6 @@
 """Global: readable execution phases. Local: compose independently testable components."""
 
 from pathlib import Path  # Every phase shares the same explicit experiment directory.
-import time  # The supervisor receives one durable wall-clock deadline.
 
 from .config import CONDITIONS
 from .data import prepare_manifest

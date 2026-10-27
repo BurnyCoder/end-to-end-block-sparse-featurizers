@@ -5,7 +5,6 @@ https://docs.pytorch.org/docs/stable/notes/randomness.html;
 https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.clip_grad_norm_.html.
 """
 
-from dataclasses import replace  # Bind the actual recipe to each checkpoint.
 from pathlib import Path  # Isolate every condition/seed/lr experiment.
 import math  # Account for partial final accumulation groups.
 import time  # Enforce a wall-time budget without looking at test outcomes.

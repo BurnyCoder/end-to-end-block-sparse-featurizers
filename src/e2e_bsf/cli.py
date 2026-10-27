@@ -8,7 +8,6 @@ import argparse  # Standard-library CLI avoids another configuration framework.
 from dataclasses import replace  # CLI overrides remain explicit in saved configs.
 import os  # Set cuBLAS determinism before importing CUDA-using modules.
 from pathlib import Path
-import sys
 
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")  # Required for deterministic CUDA GEMMs.
 
