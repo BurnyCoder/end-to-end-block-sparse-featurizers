@@ -84,6 +84,8 @@ def stage_bundle(spec, cell):
 
 def publish(spec, logger):
     """Upload every completed cell to its own collection, preserving failures for resumable publication."""
+    if not any((Path(spec.root) / "runs" / cell.key / "test_summary.json").exists() for cell in spec.cells()):
+        raise RuntimeError("No completed evaluated sweep models are available; no remote collection or upload was created")
     check_access()
     root, api = Path(spec.root), HfApi()
     collection = api.create_collection(namespace="BurnyCoder", title="DINOv3 BSFs - downstream reconstruction sweep",
