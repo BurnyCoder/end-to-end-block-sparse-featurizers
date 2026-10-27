@@ -1,8 +1,12 @@
 # Full-size pilots and allocation recovery
 
+This is the historical allocation record written before main training. The bounded study has since
+completed; see the [final findings](findings.md) and [plan completion audit](../../docs/plan-completion.md).
+
 All 30 pilots completed before the preparation deadline: five conditions, two learning rates and
 three paired seeds (0, 1, 2). Each used 510 training and 250 development images for one epoch.
-The final test split has not been evaluated. [Every trial is retained](pilot.json), including
+At the time of this allocation decision, the final test split had not been evaluated.
+[Every trial is retained](pilot.json), including
 development KL, elapsed time and microbatch size. Shared methodology and sources are in the
 [preregistration](../../docs/preregistration.md) and [methodology](../../docs/methodology.md).
 
@@ -33,9 +37,9 @@ the optimization budget. The [original failure status](allocation_failure.json) 
 No main run or reserved test evaluation preceded this failure.
 
 The user-specified plan permits an exploratory study when adequate replication cannot fit. The
-recovery implements that alternative explicitly: use the largest feasible count between five
+recovery implemented that alternative explicitly: use the largest feasible count between five
 and the requested count, or fail if fewer than five fit. For these measurements, the registered
-next stage is seeds 100–104, one common epoch, all five conditions, the LRs above and unchanged
+main stage was seeds 100–104, one common epoch, all five conditions, the LRs above and unchanged
 architectures. Each run receives all 7,575 training images once. This post-pilot allocation amendment
 is disclosed in the preregistration. Its estimated power falls short of the target by 2.53 percentage
 points; one epoch also limits conclusions about convergence. No extra training will be added for
