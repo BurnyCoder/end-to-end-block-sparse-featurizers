@@ -2,7 +2,7 @@
 
 import numpy as np  # Synthetic inputs have known ground truth.
 
-from e2e_bsf.data import assign_splits
+from e2e_bsf.data import assign_splits, exclude_previewed_test_groups
 from e2e_bsf.statistics import paired_summary
 
 
@@ -26,3 +26,14 @@ def test_paired_summary_reports_all_seeds():
     assert np.isclose(summary["mean_improvement"], 1.0)
     assert summary["ci95"] == [1.0, 1.0]
     assert paired_summary({1: 2.0}, {2: 1.0})["n_pairs"] == 0
+
+
+def test_engineering_preview_excludes_entire_test_group():
+    """Local: preview exclusion uses identities; global: no inspected test group is reused."""
+    rows = [{"id": "seen", "group": 1, "split": "test"},
+            {"id": "near_duplicate", "group": 1, "split": "test"},
+            {"id": "unseen", "group": 2, "split": "test"},
+            {"id": "fitting", "group": 3, "split": "train"}]
+    excluded = exclude_previewed_test_groups(rows, {"seen"})
+    assert excluded == {1}
+    assert [row["split"] for row in rows] == ["excluded", "excluded", "test", "train"]

@@ -97,6 +97,7 @@ def train_one(config, condition, seed, logger, run_name=None, deadline=None, max
         if previous["cuda_rng"] and torch.cuda.is_available():
             torch.cuda.set_rng_state_all(previous["cuda_rng"])
     started = time.monotonic()
+    revision = previous["source_revision"] if previous else source_revision()  # Preserve the code identity at run start.
     history_path = run / "history.jsonl"
     objective_name = condition.split("_", 1)[1]
 
@@ -112,7 +113,7 @@ def train_one(config, condition, seed, logger, run_name=None, deadline=None, max
                 "data_order": "numpy.default_rng(seed + epoch * 1000003).permutation(train_indices)",
                 "elapsed_seconds": elapsed + time.monotonic() - started, "status": status,
                 "model_id": MODEL_ID, "model_revision": MODEL_REVISION, "bsf_revision": BSF_REVISION,
-                "source_revision": source_revision(), **identity}
+                "source_revision": revision, **identity}
 
     while epoch < config.epochs:
         order = np.random.default_rng(seed + epoch * 1000003).permutation(train)

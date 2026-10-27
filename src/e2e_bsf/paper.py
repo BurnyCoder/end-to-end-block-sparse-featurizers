@@ -8,7 +8,7 @@ from xml.sax.saxutils import escape  # Paragraph markup must not execute arbitra
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak, KeepTogether
 
 
 def write_paper(destination, evidence, markdown_table):
@@ -35,8 +35,8 @@ def write_paper(destination, evidence, markdown_table):
             from PIL import Image as PILImage
             with PILImage.open(path) as opened:
                 height = width * opened.height / opened.width
-            story.append(Image(str(path), width=width, height=height))
-            paragraph(caption, "SmallBody")
+            story.append(KeepTogether([Image(str(path), width=width, height=height),
+                                       Paragraph(caption, styles["SmallBody"])]))
 
     paragraph("End-to-End Block-Sparse Featurizers for a Frozen Vision Readout", "PaperTitle")
     paragraph("Libor Burian", "Heading2")
@@ -75,7 +75,8 @@ def write_paper(destination, evidence, markdown_table):
     heading("3. Data, optimization and analysis")
     paragraph("Image SHA-256 and 64-bit perceptual hashes (Hamming distance at most four) define duplicate components before splitting. "
               "Official Imagenette training becomes an 80/20 grouped training/development split at seed 42; official validation is "
-              "reserved for testing. Training members of test-related duplicate groups are excluded. Normalization never refits on "
+              "reserved for testing. Training members of test-related duplicate groups are excluded. Test groups inspected during "
+              "the separate engineering smoke run are also excluded from the full study's test set. Normalization never refits on "
               "development or test. Perceptual hashing is a limited screen, not a guarantee that all related images are detected.")
     paragraph("Adam uses gradient clipping at one and cosine decay to 10% of the initial learning rate. The pilot compares 1e-4 and "
               "3e-4 equally, using independent seeds 0,1,2 on 510 training and 250 development images. A paired-difference power "
@@ -99,7 +100,7 @@ def write_paper(destination, evidence, markdown_table):
         values = [row["label"], str(row["n_seeds"]), f"{row['kl']:.6g}", f"{row['accuracy']:.2%}",
                   f"{row['nmse']:.5g}", f"{row['dead_fraction']:.2%}"]
         table_data.append([Paragraph(value, styles["SmallBody"]) for value in values])
-    table = Table(table_data, colWidths=[145, 35, 83, 64, 64, 70], repeatRows=1)
+    table = Table(table_data, colWidths=[135, 45, 83, 64, 64, 70], repeatRows=1)
     table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e4edf2")),
                                ("VALIGN", (0, 0), (-1, -1), "TOP"), ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
                                ("LINEBELOW", (0, 0), (-1, 0), 0.7, colors.HexColor("#557287"))]))
@@ -121,7 +122,8 @@ def write_paper(destination, evidence, markdown_table):
         if rows:
             values = {name: sum(row["kl"][name] - row["kl"]["baseline"] for row in rows) / len(rows)
                       for name in ("remove_selected", "remove_random_matched", "swap_same_class", "swap_other_class")}
-            paragraph(escape(diagnostic["condition"]) + f", seed {diagnostic['seed']}, {len(rows)} examples: " + escape(str(values)) + " (mean KL change).", "SmallBody")
+            compact = "; ".join(f"{name}: {value:.5g}" for name, value in values.items())
+            paragraph(escape(diagnostic["condition"]) + f", seed {diagnostic['seed']}, {len(rows)} examples: " + escape(compact) + " (mean KL change).", "SmallBody")
     heading("6. Discussion, limitations and implications")
     paragraph("A ten-class softmax constrains at most nine independent logit contrasts per image. Output preservation can therefore "
               "coexist with poor reconstruction, altered spatial maps or discarded information. This study does not test broad DINO "
