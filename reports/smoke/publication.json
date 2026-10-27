@@ -1,0 +1,25 @@
+{
+  "collection": "https://huggingface.co/collections/BurnyCoder/end-to-end-bsfs-on-dinov3-smoke-6adff6caaaf7fa9377f043d1",
+  "models": [
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-block-kl-mse-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-block-kl-mse-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-block-kl-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-block-kl-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-block-mse-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-block-mse-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-scalar-kl-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-scalar-kl-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-scalar-mse-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-smoke-scalar-mse-seed100"
+    }
+  ]
+}

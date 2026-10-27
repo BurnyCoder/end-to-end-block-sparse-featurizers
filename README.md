@@ -49,6 +49,9 @@ The teacher is a **new frozen ten-class patch classifier on DINOv3**, not a nati
 The selected Grassmannian implementation uses signed codes, QR-orthonormal blocks and block TopK.
 Main settings are 4096 blocks × 3 coordinates, 16 active blocks. Scalar controls match total width
 and 48 active coordinates. Local-MSE and KL runs share initializations and image order.
+The primary and scalar featurizers have 9,441,280 and 9,449,472 trainable parameters respectively:
+both contain 9,437,184 chart coefficients, with 4,096 versus 12,288 learned gains. Smoke counts
+are 73,760 and 73,824. Exact instantiated counts are saved with every evaluation.
 The complete scientific specification is in [the preregistration](docs/preregistration.md).
 
 Requirements: Git, [uv](https://docs.astral.sh/uv/), Python 3.12 (managed by uv), an NVIDIA GPU with a
