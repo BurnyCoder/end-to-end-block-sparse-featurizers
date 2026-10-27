@@ -58,6 +58,16 @@ preservation of all DINO information. The separate [engineering smoke study](rep
 and [experiment ledger](reports/experiments.md) retain the earlier positive and negative findings.
 All smoke-preview test groups were excluded from the full study's test set.
 
+**Comparison with Braun et al. (2024):**
+[Sections 3.1–3.2 of *Identifying Functionally Important Features with End-to-End Sparse Dictionary Learning*](https://arxiv.org/html/2405.12241v2#S3.SS2)
+report improved sparsity/performance tradeoffs in language-model SAEs despite worse activation
+reconstruction. Our higher patch NMSE alongside lower mean output KL is qualitatively consistent
+with this tradeoff, but our primary confidence interval includes zero: we have not reproduced their
+broader performance or interpretability results. Their extra reconstruction penalty targets downstream
+layers; our `KL + 0.1 MSE` targets insertion-layer patches, so these regularizers differ. Our fixed
+sparsity and ten-class vision readout also differ from their sparsity sweeps. The
+[paper's discussion](reports/study/paper.pdf) gives the numerical comparison and its limits.
+
 ## Method and use
 
 The teacher is a **new frozen ten-class patch classifier on DINOv3**, not a native DINO class head.
