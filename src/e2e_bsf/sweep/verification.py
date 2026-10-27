@@ -1,6 +1,7 @@
 """Global: verify the actual causal insertion; local: real cached versus hooked online gradients.
 
-Source: https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook.
+Sources: https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.register_forward_hook;
+https://docs.pytorch.org/docs/stable/notes/numerical_accuracy.html#batched-computations-or-slice-computations.
 """
 
 from pathlib import Path
@@ -16,7 +17,7 @@ from .cache import check_deadline
 
 
 def verify(spec, ctx, logger, deadline=None):
-    """Use two training images, all 201 tokens, and the full dictionary; never inspect test scores."""
+    """Use one extraction-sized training batch, all 201 tokens and the full dictionary."""
     destination = Path(spec.root) / "verification.json"
     if destination.exists():
         result = read_json(destination)
@@ -24,7 +25,9 @@ def verify(spec, ctx, logger, deadline=None):
             raise ValueError("Verification inputs changed")
         return result
     check_deadline(deadline)
-    ids = ctx.indices("train")[:2]
+    # CUDA kernels can round differently across batch shapes; compare both paths at the cached shape.
+    extraction_batch = read_json(Path(spec.root) / "cache.json")["microbatch"]
+    ids = ctx.indices("train")[:extraction_batch]
     cached, targets, teacher = ctx.batch(ids)
     images = image_batch(ctx.rows, ids, Path(spec.source_root).parent / "data")
     pixels = ctx.processor(images=images, return_tensors="pt").to(ctx.device)
@@ -88,7 +91,8 @@ def verify(spec, ctx, logger, deadline=None):
     assert versions == {name: value._version for name, value in ctx.backbone.state_dict(keep_vars=True).items()}
     for name, value in ctx.probe.state_dict().items():
         torch.testing.assert_close(value, probe_before[name], atol=0, rtol=0)
-    result = {"passed": True, "identity": ctx.identity, "images": ids.tolist(), "cached_online_losses": losses,
+    result = {"passed": True, "identity": ctx.identity, "images": ids.tolist(), "microbatch": extraction_batch,
+              "cached_online_losses": losses,
               "maximum_gradient_difference": {name: float((gradients[0][name] - gradients[1][name]).abs().max()) for name in gradients[0]},
               "maximum_state_difference": max(float((a - b).abs().max()) for a, b in zip(online, [cached, *targets])),
               "identity_kl": float(forward_kl(identity, teacher).mean()), "mean_replacement_kl": mean_kl,

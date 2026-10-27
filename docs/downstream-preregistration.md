@@ -3,6 +3,7 @@
 Registered before the new study's extraction and optimization. This is a separate **24-hour
 exploratory follow-up**, not an extension or reanalysis that changes the completed final-layer study.
 The human selected the full grid, one training seed, all-token replacement and disclosed test reuse.
+Post-registration engineering issues are recorded separately in [execution notes](downstream-execution-notes.md).
 
 ## Question, scope and falsifier
 
