@@ -1,0 +1,29 @@
+<!doctype html>
+<!-- Global: scientific results explorer. Local: static, accessible GitHub Pages interface. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>End-to-end BSFs · Evidence explorer</title><link rel="stylesheet" href="style.css">
+<script src="plotly.min.js" defer></script><script src="app.js" defer></script></head>
+<body><header><a class="brand" href="https://github.com/BurnyCoder/end-to-end-block-sparse-featurizers">BSF / RESEARCH</a>
+<a href="paper.pdf">Read the paper ↗</a></header>
+<main><p class="eyebrow">VISION · STRUCTURED SPARSITY · OUTPUT FIDELITY</p><h1>What survives<br>the bottleneck?</h1>
+<p class="intro">A frozen vision model. A sparse reconstruction of its internal patches. One question: how much of its output behavior remains?</p>
+<div class="status" id="status" role="status">Loading measured evidence…</div>
+<section class="stats" id="stats" aria-label="Study facts"></section>
+<section><div class="section-head"><div><p class="eyebrow">01 / THE COMPARISON</p><h2>Behavior and reconstruction</h2></div>
+<label>Metric<select id="metric"><option value="kl">Output KL · lower is better</option><option value="nmse">Normalized MSE · lower is better</option><option value="accuracy">Classification accuracy</option><option value="dead_fraction">Dead block fraction</option><option value="stable_rank">Within-block stable rank</option></select></label></div>
+<p id="finding"></p><div id="comparison" class="chart" aria-label="Measured condition comparison"></div>
+<div class="table-wrap"><table id="results"><caption>All completed conditions</caption><thead><tr><th>Condition</th><th>Seeds</th><th>KL / image</th><th>Accuracy</th><th>NMSE</th><th>Active blocks</th></tr></thead><tbody></tbody></table></div>
+<p class="note">Error bars, when available, are 95% intervals across training seeds. A single seed has no seed interval. Image-level uncertainty is available in the raw data.</p></section>
+<section><p class="eyebrow">02 / OPTIMIZATION</p><h2>Every training curve</h2><div id="training" class="chart"></div>
+<p class="note">Curves show complete recorded batch KL against image exposure. No favorable epoch selection or smoothing.</p></section>
+<section><div class="section-head"><div><p class="eyebrow">03 / LOOK INSIDE</p><h2>Block activation maps</h2></div>
+<label>Condition<select id="condition"></select></label><label>Example<select id="example"></select></label><label>Block<select id="block"></select></label></div>
+<p>Blocks are selected by development energy. These are fixed development examples; matching colors do not imply matching concepts between dictionaries.</p>
+<div class="two-col"><div id="map" class="chart"></div><div id="probabilities" class="chart"></div></div>
+<p class="note" id="example-id"></p></section>
+<section><p class="eyebrow">04 / INTERVENTIONS</p><h2>Remove or swap a block</h2><div id="interventions" class="chart"></div>
+<p class="note">Exploratory mean changes in KL for predetermined test-image pairs. Random removal uses an active block from the eight closest-energy alternatives. These interventions do not establish semantic concepts.</p></section>
+<section class="limits"><p class="eyebrow">READ THE BOUNDARY OF THE CLAIM</p><h2>Ten classes are not the whole representation.</h2>
+<p>The original model is DINOv3 plus a fixed patch classifier. A ten-class softmax constrains at most nine independent logit contrasts per image. Low KL can coexist with lost geometry or information. These results measure this readout's fidelity, not universal DINO preservation or concept discovery.</p>
+<nav><a href="data.json">Download complete evidence</a><a href="https://github.com/BurnyCoder/end-to-end-block-sparse-featurizers/blob/main/docs/preregistration.md">Preregistered method</a><a href="https://arxiv.org/abs/2606.25234">BSF paper</a><a href="https://arxiv.org/abs/2405.12241">End-to-end SAE paper</a></nav></section>
+</main><footer>Libor Burian · Reproducible experiments, including negative results.</footer></body></html>
