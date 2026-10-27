@@ -8,6 +8,10 @@ It combines [Goodfire's BSFs](https://arxiv.org/abs/2606.25234) with
 
 ![Data flow and frozen/trainable components](docs/assets/architecture.svg)
 
+**New follow-up, registered but not yet run:** a [block-6 downstream reconstruction and sparsity sweep](docs/downstream-preregistration.md)
+will replace all 201 tokens and compare 25 operating points with one seed in a separate 24-hour budget.
+It explicitly reuses the previously analyzed Imagenette test set. The completed final-layer results below remain historical.
+
 **Completed, 2026-10-27:** all 25 runs and 3,875-image test evaluations finished within the original
 24-hour limit. Five paired seeds received one epoch each. The study is exploratory: the pilot-based
 power estimate was 77.5%, below the 80% target, and training was short. Block KL reduced mean KL by
@@ -125,6 +129,21 @@ to a Hugging Face collection. Use an HF account with write permission. Generated
 are committed to GitHub; the included Pages workflow deploys the explorer from `main`.
 
 ## Features and technologies
+
+The separate intermediate-layer workflow uses the original prepared data and frozen readout:
+
+```powershell
+uv run e2e-bsf sweep run --spec configs/downstream-sweep.toml
+uv run e2e-bsf sweep report --spec configs/downstream-sweep.toml
+uv run e2e-bsf sweep publish --spec configs/downstream-sweep.toml
+```
+
+Its phases are `prepare`, `verify`, `pilot`, `train`, `evaluate`, `report`, and `publish`; `run` orchestrates
+preparation through reporting. `train --cell k016_kl` advances only that cell of an already frozen schedule.
+The default raw-state cache needs approximately **58 GB** under `D:/AI/end-to-end-block-sparse-featurizers/downstream-v1`.
+Set `E2E_SWEEP_CACHE_DIR` in `.env` for another dedicated location. Additional overrides are
+`E2E_SWEEP_ROOT`, `E2E_SWEEP_SOURCE_ROOT`, and `E2E_SWEEP_DEVICE`; paths and configuration are immutable after preparation starts.
+The [sweep explorer](https://burnycoder.github.io/end-to-end-block-sparse-featurizers/sweep/) publishes measured results when available.
 
 - PyTorch/CUDA, Transformers/DINOv3, torchvision/Imagenette, scikit-learn probe and grouped splits.
 - Five matched training conditions, deterministic resume, partial-batch handling and memory backoff.
