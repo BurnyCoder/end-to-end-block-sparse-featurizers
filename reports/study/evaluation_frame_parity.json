@@ -1,0 +1,48 @@
+[
+  {
+    "condition": "block_mse",
+    "split": "development",
+    "images": 7,
+    "indices": [
+      6,
+      8,
+      9,
+      11,
+      12,
+      14,
+      17
+    ],
+    "batch_size": 3,
+    "device": "cuda",
+    "maximum_absolute_logit_difference": 0.0,
+    "architecture": {
+      "d": 768,
+      "n_groups": 4096,
+      "group_size": 3,
+      "l0": 16
+    }
+  },
+  {
+    "condition": "scalar_mse",
+    "split": "development",
+    "images": 7,
+    "indices": [
+      6,
+      8,
+      9,
+      11,
+      12,
+      14,
+      17
+    ],
+    "batch_size": 3,
+    "device": "cuda",
+    "maximum_absolute_logit_difference": 0.0,
+    "architecture": {
+      "d": 768,
+      "n_groups": 12288,
+      "group_size": 1,
+      "l0": 48
+    }
+  }
+]
