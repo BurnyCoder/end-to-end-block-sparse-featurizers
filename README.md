@@ -8,6 +8,12 @@ It combines [Goodfire's BSFs](https://arxiv.org/abs/2606.25234) with
 
 ![Data flow and frozen/trainable components](docs/assets/architecture.svg)
 
+**Full-study status, 2026-10-27:** all 30 pilots finished. The power target requires six seeds, but
+only five fit the original compute budget. The registered next stage is exploratory: five paired
+seeds, one epoch per condition, estimated power 77.5%. The original deadline remains
+2026-10-28 01:02 UTC. See the [pilot results and recovery amendment](reports/study/pilot.md).
+The measured results below remain the completed engineering smoke study; full test results are pending.
+
 <!-- measured-results:start -->
 
 **Engineering smoke experiment: one seed, small data and dictionary; no confirmatory claim.**

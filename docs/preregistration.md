@@ -68,6 +68,24 @@ Measured scalar QR runtime is roughly three times the block runtime. The revised
 condition's own slowest pilot cost, retaining the same 25% allowance, common epoch count, replication
 rule and 20-hour optimization cap. This is a timing-only correction; test outcomes remain unseen.
 
+**Exploratory fallback clarification, 2026-10-27, after all pilots and before any main run or test evaluation:**
+the allocator initially stopped because the power calculation requested six seeds, whose conservative
+one-epoch forecast is 22.24 hours. Five seeds require 18.53 hours and have estimated power 0.7747.
+To implement the already specified exploratory alternative, when requested replication cannot fit
+one common epoch, use the largest feasible seed count between five and the requested count. If five
+cannot fit, stop. Save the requested count, estimated shortfall, available time and allocation reason.
+This explicit allocation rule was added after observing pilot data and is an amendment, not an
+originally implemented confirmatory rule. The next stage is therefore exploratory: seeds 100–104,
+one epoch, all five conditions, 7,575 training images per run. Selected LRs are 3e-4 for all conditions
+except scalar MSE (1e-4). The original 2026-10-28 01:02:10 UTC wall-time deadline and two-hour final
+evaluation reservation remain unchanged. Do not add epochs or seeds if execution is faster than forecast.
+Full pilot evidence and the allocation failure are recorded in [the pilot report](../reports/study/pilot.md).
+
+The same amendment permits reusing fixed QR frames within each no-gradient evaluation call. Frames
+are recomputed for each call and every training forward; equations, gradients and image exposure
+are unchanged. Retain the original conservative pilot timing forecast rather than spending this
+speedup on extra runs. Tests compare both architectures' outputs and prohibit stale cross-call frames.
+
 ## Analysis and safeguards
 
 Final checkpoints use the common fixed exposure, not the best test epoch. Complete all scheduled

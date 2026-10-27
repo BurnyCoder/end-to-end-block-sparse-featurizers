@@ -26,9 +26,9 @@ class GrassmannianBSF(nn.Module):
         """Local: differentiable QR; global: constrain each block to an orthonormal chart."""
         return torch.linalg.qr(self.B_raw.float(), mode="reduced").Q  # QR stays float32.
 
-    def forward(self, x):
+    def forward(self, x, frames=None):
         """Local: encode, block-TopK, decode; global: implement the reconstruction bottleneck."""
-        frames = self.frames()  # Reuse the same charts for encoder and decoder.
+        frames = self.frames() if frames is None else frames  # Training recomputes differentiable QR; inference may supply fixed charts.
         atoms = frames.transpose(1, 2).reshape(-1, self.d)  # Stack [group,coordinate] rows.
         codes = (x.float() @ atoms.T).reshape(-1, self.n_groups, self.group_size)
         codes = codes * self.gamma[None, :, None]  # One learned gain per block, as released.
@@ -42,9 +42,9 @@ class GrassmannianBSF(nn.Module):
         return self.frames().transpose(1, 2)  # [groups, coordinates, activation dimension].
 
 
-def reconstruct(model, normalization, patches):
+def reconstruct(model, normalization, patches, frames=None):
     """Local: flatten only inside the BSF; global: preserve complete image readouts."""
     x = normalization(patches)  # Fixed training-derived transform.
-    x_hat, codes = model(x.flatten(0, 1))  # Every patch uses the same dictionary.
+    x_hat, codes = model(x.flatten(0, 1), frames=frames)  # Every patch uses the same dictionary.
     x_hat = x_hat.reshape_as(x)  # Restore image boundaries before pooling.
     return normalization.inverse(x_hat), codes, (x_hat - x).square().mean()

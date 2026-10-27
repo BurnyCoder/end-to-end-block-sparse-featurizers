@@ -1,0 +1,242 @@
+[
+  {
+    "condition": "block_mse",
+    "seed": 0,
+    "lr": 0.0001,
+    "dev_kl": 0.6548927426338196,
+    "seconds": 91.70300000000861,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl",
+    "seed": 0,
+    "lr": 0.0001,
+    "dev_kl": 0.5654957294464111,
+    "seconds": 91.01600000000326,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl_mse",
+    "seed": 0,
+    "lr": 0.0001,
+    "dev_kl": 0.5670492649078369,
+    "seconds": 90.75,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_mse",
+    "seed": 0,
+    "lr": 0.0001,
+    "dev_kl": 0.28547078371047974,
+    "seconds": 283.7809999999881,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_kl",
+    "seed": 0,
+    "lr": 0.0001,
+    "dev_kl": 0.17398159205913544,
+    "seconds": 248.625,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_mse",
+    "seed": 0,
+    "lr": 0.0003,
+    "dev_kl": 0.34366869926452637,
+    "seconds": 75.82800000000861,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl",
+    "seed": 0,
+    "lr": 0.0003,
+    "dev_kl": 0.2828659117221832,
+    "seconds": 76.09400000001187,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl_mse",
+    "seed": 0,
+    "lr": 0.0003,
+    "dev_kl": 0.28349781036376953,
+    "seconds": 75.64000000001397,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_mse",
+    "seed": 0,
+    "lr": 0.0003,
+    "dev_kl": 0.33624446392059326,
+    "seconds": 258.7809999999881,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_kl",
+    "seed": 0,
+    "lr": 0.0003,
+    "dev_kl": 0.0988248884677887,
+    "seconds": 238.0470000000205,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_mse",
+    "seed": 1,
+    "lr": 0.0001,
+    "dev_kl": 0.6594352126121521,
+    "seconds": 74.73399999999674,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl",
+    "seed": 1,
+    "lr": 0.0001,
+    "dev_kl": 0.5484756231307983,
+    "seconds": 75.26600000000326,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl_mse",
+    "seed": 1,
+    "lr": 0.0001,
+    "dev_kl": 0.5507045388221741,
+    "seconds": 75.40600000001723,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_mse",
+    "seed": 1,
+    "lr": 0.0001,
+    "dev_kl": 0.24397622048854828,
+    "seconds": 239.65700000000652,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_kl",
+    "seed": 1,
+    "lr": 0.0001,
+    "dev_kl": 0.13436341285705566,
+    "seconds": 239.15700000000652,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_mse",
+    "seed": 1,
+    "lr": 0.0003,
+    "dev_kl": 0.36559760570526123,
+    "seconds": 73.81299999999464,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl",
+    "seed": 1,
+    "lr": 0.0003,
+    "dev_kl": 0.26457780599594116,
+    "seconds": 74.28200000000652,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl_mse",
+    "seed": 1,
+    "lr": 0.0003,
+    "dev_kl": 0.2652676999568939,
+    "seconds": 74.70299999997951,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_mse",
+    "seed": 1,
+    "lr": 0.0003,
+    "dev_kl": 0.3163137137889862,
+    "seconds": 248.375,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_kl",
+    "seed": 1,
+    "lr": 0.0003,
+    "dev_kl": 0.07094072550535202,
+    "seconds": 260.0780000000086,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_mse",
+    "seed": 2,
+    "lr": 0.0001,
+    "dev_kl": 0.6925058364868164,
+    "seconds": 89.84400000001187,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl",
+    "seed": 2,
+    "lr": 0.0001,
+    "dev_kl": 0.5520461201667786,
+    "seconds": 89.125,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl_mse",
+    "seed": 2,
+    "lr": 0.0001,
+    "dev_kl": 0.5510051250457764,
+    "seconds": 89.82800000000861,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_mse",
+    "seed": 2,
+    "lr": 0.0001,
+    "dev_kl": 0.31313711404800415,
+    "seconds": 286.7970000000205,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_kl",
+    "seed": 2,
+    "lr": 0.0001,
+    "dev_kl": 0.17337371408939362,
+    "seconds": 295.0309999999881,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_mse",
+    "seed": 2,
+    "lr": 0.0003,
+    "dev_kl": 0.3711453378200531,
+    "seconds": 89.84400000001187,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl",
+    "seed": 2,
+    "lr": 0.0003,
+    "dev_kl": 0.2741701006889343,
+    "seconds": 87.9210000000021,
+    "microbatch": 8
+  },
+  {
+    "condition": "block_kl_mse",
+    "seed": 2,
+    "lr": 0.0003,
+    "dev_kl": 0.2678871750831604,
+    "seconds": 92.32799999997951,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_mse",
+    "seed": 2,
+    "lr": 0.0003,
+    "dev_kl": 0.381756991147995,
+    "seconds": 253.34400000001187,
+    "microbatch": 8
+  },
+  {
+    "condition": "scalar_kl",
+    "seed": 2,
+    "lr": 0.0003,
+    "dev_kl": 0.08911982923746109,
+    "seconds": 284.71899999998277,
+    "microbatch": 8
+  }
+]
