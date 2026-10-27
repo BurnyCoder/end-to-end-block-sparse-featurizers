@@ -147,3 +147,24 @@ def test_observed_pareto_and_shared_bootstrap():
         samples.append(values[rows].mean(0))
     expected = np.percentile(samples, [2.5, 97.5], axis=0).T
     np.testing.assert_allclose(bootstrap_columns(values, [0, 0, 1], 200), expected)
+
+
+def test_real_verification_matches_cache_batch_geometry(tmp_path):
+    """Compare equal float32 kernel shapes rather than imposing bitwise batch-size invariance."""
+    import logging
+    from types import SimpleNamespace
+    from e2e_bsf.io import write_json
+    from e2e_bsf.sweep.verification import verify
+    write_json(tmp_path / "cache.json", {"microbatch": 8})
+
+    class SelectionChecked(Exception):
+        """End the isolated test before any image/model access."""
+
+    def batch(ids):
+        """Only the first eight designated training images may enter the comparison."""
+        np.testing.assert_array_equal(ids, np.arange(8))
+        raise SelectionChecked
+
+    ctx = SimpleNamespace(indices=lambda split: np.arange(12) if split == "train" else [], batch=batch)
+    with pytest.raises(SelectionChecked):
+        verify(replace(SweepSpec(), root=str(tmp_path)), ctx, logging.getLogger("batch_geometry"))
