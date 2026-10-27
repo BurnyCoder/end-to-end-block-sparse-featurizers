@@ -1,0 +1,44 @@
+{
+  "verified_utc": "2026-10-27T20:21:48.812257+00:00",
+  "url": "https://burnycoder.github.io/end-to-end-block-sparse-featurizers/sweep/",
+  "merge_commit": "eaf3027c4d9022d8e3c16af6be7649f894023649",
+  "passed": true,
+  "checks": [
+    {
+      "file": "index.html",
+      "sha256": "368d392dc5a6206526591c3295be7360c5508ad4ae33c749c4b8ed1eaeec0ea8",
+      "text_newlines_normalized": true
+    },
+    {
+      "file": "app.js",
+      "sha256": "da5dbfc8268dd419add608fdd76e2e5198990e2c13e6c8535c9279fc31c4205d",
+      "text_newlines_normalized": true
+    },
+    {
+      "file": "data.json",
+      "sha256": "7188d5aadf138c3edaf8c8d07c25a3d62a5c85250c470e9303e8031bf75a0b0f",
+      "text_newlines_normalized": true
+    },
+    {
+      "file": "paper.pdf",
+      "sha256": "a86469072f65c85b0084c351fdcf1d574533a724d2f9b33e90775622ca161a3e",
+      "text_newlines_normalized": false
+    },
+    {
+      "file": "figures/pilot_endpoints.png",
+      "sha256": "296ee2a37d7c1eb3b7633ce77f927beb08e72836596bdd571a353bba40908e08",
+      "text_newlines_normalized": false
+    },
+    {
+      "file": "figures/pilot_training.png",
+      "sha256": "b95a0f18f28e4e58268a07bf4d6fdba159303190cf48af0ed33f5ea965fa0c67",
+      "text_newlines_normalized": false
+    },
+    {
+      "file": "figures/verification.png",
+      "sha256": "0dbbb58d37c7928311c465ce5df24e544dd1918b8416885dc6536e396e589932",
+      "text_newlines_normalized": false
+    }
+  ],
+  "hugging_face": "No completed evaluated main models; publish refused before authentication or collection creation."
+}

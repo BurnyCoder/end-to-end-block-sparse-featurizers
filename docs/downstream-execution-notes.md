@@ -69,3 +69,8 @@ visually inspected. The browser check found all 50 pilot statuses, 16 selectable
 and no visible main-result panels or browser errors. Changing the selection displayed the incomplete
 16th trial's 16 recorded updates. These checks verify the delivered implementation and failure record;
 they do not supply the missing scientific measurements.
+
+The [publication verification](../reports/downstream-sweep/publication_verification.json) checks all seven
+deployed sweep files against the reviewed local artifacts, with newline normalization for text files.
+The public explorer also displayed all 50 statuses, 16 histories and labeled axes. The separate
+Hugging Face publication phase correctly refused before authentication because no main model qualified.
