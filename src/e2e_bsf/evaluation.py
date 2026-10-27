@@ -42,6 +42,8 @@ def measure(model, normalization, probe, features, rows, indices, device, batch_
                                    "nmse", "teacher_logits", "modified_logits")}
     counts = sums = second = None  # Code statistics are optional during frequent development checks.
     map_tv, map_dirichlet, map_count, patch_count, scalar_active = 0.0, 0.0, 0, 0, 0
+    frames = model.frames() if model is not None else None  # Parameters cannot change within this no-grad evaluation call.
+    # Inference scope: https://docs.pytorch.org/docs/stable/generated/torch.no_grad.html; no frames persist across calls.
     if diagnostics and model is not None:
         counts = torch.zeros(model.n_groups, device=device, dtype=torch.float64)
         sums = torch.zeros(model.n_groups, model.group_size, device=device, dtype=torch.float64)
@@ -57,7 +59,7 @@ def measure(model, normalization, probe, features, rows, indices, device, batch_
         elif replacement == "mean":
             modified, codes = normalization.mean.expand_as(patches), None
         else:
-            modified, codes, _ = reconstruct(model, normalization, patches)
+            modified, codes, _ = reconstruct(model, normalization, patches, frames=frames)
         logits = probe(modified)
         labels = torch.tensor([rows[int(i)]["label"] for i in ids], device=device)
         batch_values = {"kl": forward_kl(logits, teacher_logits),
