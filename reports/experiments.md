@@ -55,7 +55,7 @@ requirements cannot be met; significance is never an acceptance requirement.
 
 ## Final implementation review
 
-Fifteen focused tests pass locally and in GitHub Actions. The review covered KL orientation and
+The release's focused tests pass locally and in GitHub Actions. The review covered KL orientation and
 reduction, exact released-architecture output/gradient parity, QR constraints, whole-image grouping,
 frozen readout/backbone paths, split isolation, partial batches, checkpoint identity, and deterministic
 resume including an interrupted history write. No model equation changed after the smoke result.
@@ -69,3 +69,17 @@ normalization, split manifests and provenance are in the linked Hugging Face col
 Small verification records and publication URLs are retained in [smoke/verification.json](smoke/verification.json),
 [smoke/publication_roundtrip.json](smoke/publication_roundtrip.json), and
 [smoke/publication.json](smoke/publication.json).
+
+## Timing amendment before confirmation
+
+The first full-size block pilots took about 91 seconds for 510 training plus 250 development images;
+the scalar architecture is substantially slower because its QR batch has three times as many blocks.
+The original forecast charged every condition the slowest architecture's time, which could reject a
+schedule that fits the measured sum of costs. Before freezing confirmation or evaluating its test set,
+we changed the forecast to sum the slowest observed pilot cost separately for each condition, retaining
+the 25% allowance and identical image exposure. A regression test checks this unequal-throughput case.
+The amendment is recorded in the preregistration; it does not alter objectives, power thresholds or the
+wall-time limit. Short affordable training remains a limitation and is reported with the frozen epoch count.
+The allocation test also exposed a statsmodels root-finder failure at extremely large standardized
+pilot effects. Power is now evaluated directly at the permitted minimum of five seeds before solving
+for larger sample sizes; nonfinite solver results receive the conservative exploratory fallback.

@@ -53,15 +53,16 @@ def freeze_schedule(config, records, optimization_seconds):
     required = power.get("required")
     seeds = min(10, max(5, required)) if required is not None else 10
     counts = read_json(root / "manifest.json")["counts"]
-    slowest_seconds_per_image = max(row["seconds"] for row in records) / 760  # 510 train + 250 development.
-    seconds_per_epoch = 1.25 * slowest_seconds_per_image * (counts["train"] + counts["dev"])
-    epochs = min(20, int(optimization_seconds // (seeds * len(CONDITIONS) * seconds_per_epoch)))
+    seconds_per_epoch = {condition: 1.25 * max(row["seconds"] for row in records if row["condition"] == condition)
+                        / 760 * (counts["train"] + counts["dev"]) for condition in CONDITIONS}
+    seconds_per_paired_epoch = seeds * sum(seconds_per_epoch.values())  # Sum measured condition costs; exposure stays equal.
+    epochs = min(20, int(optimization_seconds // seconds_per_paired_epoch))
     if epochs < 1:
         raise TimeoutError("At least one common epoch across the required conditions/seeds cannot fit")
     schedule = {"seeds": list(range(100, 100 + seeds)), "epochs": epochs, "learning_rates": selected,
                 "microbatch": min(row["microbatch"] for row in records), "conditions": list(CONDITIONS),
                 "power": power, "exploratory": required is None or required > seeds,
-                "predicted_optimization_seconds": seeds * len(CONDITIONS) * epochs * seconds_per_epoch,
+                "predicted_optimization_seconds": epochs * seconds_per_paired_epoch,
                 "forecast_seconds_per_epoch": seconds_per_epoch,
                 "manifest_sha256": digest(root / "manifest.json"), "source_revision": source_revision(),
                 "frozen_at_unix": time.time()}

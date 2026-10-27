@@ -49,7 +49,11 @@ def required_seeds(local, kl):
     if minimum_effect <= 0 or standard_deviation <= 0:
         return {"required": None, "reason": "degenerate pilot variance/effect; use conservative cap"}
     effect_size = minimum_effect / standard_deviation
-    required = float(TTestPower().solve_power(effect_size=effect_size, alpha=0.05,
-                                              power=0.8, alternative="two-sided"))
-    return {"required": int(np.ceil(required)), "effect_size": float(effect_size),
-            "minimum_absolute_effect": float(minimum_effect), "pilot_pairs": len(seeds)}
+    analysis = TTestPower()  # Evaluate the allowed minimum before numerical root finding.
+    power_at_five = float(analysis.power(effect_size=effect_size, nobs=5, alpha=.05, alternative="two-sided"))
+    required = 5.0 if power_at_five >= .8 else float(analysis.solve_power(
+        effect_size=effect_size, alpha=.05, power=.8, alternative="two-sided"))
+    return {"required": int(np.ceil(required)) if np.isfinite(required) else None,
+            "effect_size": float(effect_size), "power_at_five": power_at_five if np.isfinite(power_at_five) else None,
+            "minimum_absolute_effect": float(minimum_effect), "pilot_pairs": len(seeds),
+            "reason": "minimum five meets target" if power_at_five >= .8 else "numerical paired-t solution"}

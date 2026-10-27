@@ -3,7 +3,7 @@
 import numpy as np  # Synthetic inputs have known ground truth.
 
 from e2e_bsf.data import assign_splits, exclude_previewed_test_groups
-from e2e_bsf.statistics import paired_summary
+from e2e_bsf.statistics import paired_summary, required_seeds
 
 
 def test_duplicate_groups_do_not_cross_splits():
@@ -37,3 +37,10 @@ def test_engineering_preview_excludes_entire_test_group():
     excluded = exclude_previewed_test_groups(rows, {"seen"})
     assert excluded == {1}
     assert [row["split"] for row in rows] == ["excluded", "excluded", "test", "train"]
+
+
+def test_high_pilot_effect_uses_minimum_replication_without_solver_failure():
+    """A near-zero paired variance must not crash the bounded design's power calculation."""
+    result = required_seeds({0: .65, 1: .67, 2: .69}, {0: .59, 1: .609, 2: .628})
+    assert result["required"] == 5
+    assert result["power_at_five"] >= .8
