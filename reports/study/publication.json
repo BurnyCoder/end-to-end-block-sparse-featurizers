@@ -1,0 +1,105 @@
+{
+  "collection": "https://huggingface.co/collections/BurnyCoder/end-to-end-bsfs-on-dinov3-full-6ae0a9d519d3d32881f784b8",
+  "models": [
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed101",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed101"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed102",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed102"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed103",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed103"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed104",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-mse-seed104"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed101",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed101"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed102",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed102"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed103",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed103"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed104",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-kl-seed104"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed101",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed101"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed102",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed102"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed103",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed103"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed104",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-block-mse-seed104"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed101",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed101"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed102",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed102"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed103",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed103"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed104",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-kl-seed104"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed100",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed100"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed101",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed101"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed102",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed102"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed103",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed103"
+    },
+    {
+      "repository": "BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed104",
+      "url": "https://huggingface.co/BurnyCoder/e2e-bsf-dinov3-imagenette-full-scalar-mse-seed104"
+    }
+  ]
+}
