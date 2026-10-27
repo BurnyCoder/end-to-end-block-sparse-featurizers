@@ -8,46 +8,54 @@ It combines [Goodfire's BSFs](https://arxiv.org/abs/2606.25234) with
 
 ![Data flow and frozen/trainable components](docs/assets/architecture.svg)
 
-**Full-study status, 2026-10-27:** all 30 pilots finished. The power target requires six seeds, but
-only five fit the original compute budget. The registered next stage is exploratory: five paired
-seeds, one epoch per condition, estimated power 77.5%. The original deadline remains
-2026-10-28 01:02 UTC. See the [pilot results and recovery amendment](reports/study/pilot.md).
-The measured results below remain the completed engineering smoke study; full test results are pending.
+**Completed, 2026-10-27:** all 25 runs and 3,875-image test evaluations finished within the original
+24-hour limit. Five paired seeds received one epoch each. The study is exploratory: the pilot-based
+power estimate was 77.5%, below the 80% target, and training was short. Block KL reduced mean KL by
+6.78%, but its paired interval spans zero. Reconstruction error increased by 44.41%.
+See the [findings and independent audit](reports/study/findings.md) and
+[disclosed pilot allocation amendment](reports/study/pilot.md).
+
+Download all 25 BSFs, frozen classifiers and normalization statistics from the
+[Hugging Face collection](https://huggingface.co/collections/BurnyCoder/end-to-end-bsfs-on-dinov3-full-6ae0a9d519d3d32881f784b8).
+The [publication audit](reports/study/publication_verification.json) verifies every uploaded file and
+real-image inference using downloaded block and scalar bundles. Original photos and DINO weights are external.
 
 <!-- measured-results:start -->
 
-**Engineering smoke experiment: one seed, small data and dictionary; no confirmatory claim.**
+**Bounded preregistered study; interpret completion and power status below. Exploratory: the pilot power target was not met.**
 
-Mean paired local-minus-KL difference: 0.115604 nats/image over 1 seed(s). KL training had lower mean output divergence. A seed-level confidence interval cannot be estimated from one seed.
+Mean paired local-minus-KL difference: 0.00254596 nats/image over 5 seed(s). KL training had lower mean output divergence. Seed-level 95% interval: [-0.00325909, 0.008351]. The interval includes zero; the directional comparison is inconclusive.
 
 | Condition | Seeds | Test KL (nats/image) | Accuracy | NMSE | Active blocks | Dead blocks |
 |---|---:|---:|---:|---:|---:|---:|
-| Block KL + 0.1 MSE | 1 | 5.75317 | 14.00% | 0.96633 | 4 | 0.00% |
-| Block KL | 1 | 5.75244 | 14.00% | 0.96635 | 4 | 0.00% |
-| Block MSE | 1 | 5.86805 | 10.00% | 0.96103 | 4 | 0.00% |
-| Scalar KL | 1 | 5.13261 | 26.00% | 0.94416 | 12 | 0.00% |
-| Scalar MSE | 1 | 5.3282 | 26.00% | 0.937 | 12 | 0.00% |
+| Block KL + 0.1 MSE | 5 | 0.0334491 | 99.27% | 0.76812 | 16 | 0.00% |
+| Block KL | 5 | 0.035026 | 99.37% | 0.78728 | 16 | 0.00% |
+| Block MSE | 5 | 0.0375719 | 98.49% | 0.54515 | 16 | 0.00% |
+| Scalar KL | 5 | 0.0309295 | 99.05% | 0.79378 | 48 | 0.00% |
+| Scalar MSE | 5 | 0.254093 | 90.74% | 0.66437 | 48 | 0.00% |
 
 | Control | Test KL (nats/image) | Accuracy | NMSE |
 |---|---:|---:|---:|
-| identity | 0 | 100.00% | 0 |
-| mean | 6.98686 | 10.00% | 1.0087 |
-| untrained | 6.02086 | 10.00% | 0.96988 |
+| identity | 0 | 99.05% | 0 |
+| mean | 3.71488 | 10.17% | 0.99943 |
+| untrained | 0.734338 | 72.10% | 0.77609 |
 
-![Measured comparison](reports/smoke/figures/comparison.png)
+![Measured comparison](reports/study/figures/comparison.png)
 
-![Fixed development block maps](reports/smoke/figures/maps.png)
+![Paired primary effects](reports/study/figures/paired_effects.png)
 
-[Detailed results and limitations](reports/smoke/summary.md) · [PDF paper](reports/smoke/paper.pdf) · [Interactive explorer](https://burnycoder.github.io/end-to-end-block-sparse-featurizers/)
+![Fixed development block maps](reports/study/figures/maps.png)
+
+[Detailed results and limitations](reports/study/summary.md) · [PDF paper](reports/study/paper.pdf) · [Interactive explorer](https://burnycoder.github.io/end-to-end-block-sparse-featurizers/)
 
 <!-- measured-results:end -->
 
-The smoke experiment verifies execution, not effectiveness: its tiny dictionaries retain only
-10–26% test accuracy, versus 100% for the clean teacher on those 50 images. KL training reduces
-divergence slightly while increasing reconstruction error. The full preregistered study is separate;
-all smoke-preview test groups are excluded from its test set. See the [experiment ledger](reports/experiments.md).
-The five engineering artifacts and their fitted classifiers are available in the
-[Hugging Face smoke collection](https://huggingface.co/collections/BurnyCoder/end-to-end-bsfs-on-dinov3-smoke-6adff6caaaf7fa9377f043d1).
+The secondary scalar comparison favored KL: mean output divergence fell from 0.25409 to 0.03093,
+while reconstruction error rose. The mixed block objective had mean KL 0.03345, also with worse
+reconstruction than local MSE. These results do not establish recovery of semantic concepts or
+preservation of all DINO information. The separate [engineering smoke study](reports/smoke/summary.md)
+and [experiment ledger](reports/experiments.md) retain the earlier positive and negative findings.
+All smoke-preview test groups were excluded from the full study's test set.
 
 ## Method and use
 
@@ -63,7 +71,8 @@ The complete scientific specification is in [the preregistration](docs/preregist
 Requirements: Git, [uv](https://docs.astral.sh/uv/), Python 3.12 (managed by uv), an NVIDIA GPU with a
 CUDA-13-compatible driver for the Windows lockfile, approximately 15 GB workspace storage, and
 authorized access to [DINOv3](https://huggingface.co/facebook/dinov3-vitb16-pretrain-lvd1689m).
-The tested target is an 8 GB RTX 5070 Laptop GPU; actual measurements are reported after execution.
+The tested target is an 8 GB RTX 5070 Laptop GPU. The 25 main runs used 9.326 hours of training;
+peak PyTorch-allocated VRAM was 699.3 MiB, excluding other applications and allocations outside PyTorch.
 
 ```powershell
 git clone https://github.com/BurnyCoder/end-to-end-block-sparse-featurizers.git

@@ -10,7 +10,7 @@ See the [method](../docs/preregistration.md) and [source review](../docs/literat
 | Experiment | Domain and data | Architecture / active coordinates | Training | Completion and evidence |
 |---|---|---|---|---|
 | Engineering smoke, seed 100 | Imagenette: 200 train, 50 dev, 50 test images | 32 × 3 blocks / 12 coordinates; scalar 96 × 1 / 12 | Adam; 3 epochs; five MSE/KL/mixed conditions; no curriculum | All five complete; [scores, curves, maps and limitations](smoke/summary.md) |
-| Registered full study | Imagenette: 7,575 train, 1,894 dev, 3,875 reserved test images | 4096 × 3 / 48; scalar 12288 × 1 / 48 | Equal LR pilot; freeze 5–10 seeds and ≤20 common epochs before test | In progress: cache and head complete, pilot grid running; durable live status is `outputs/study/study_status.json` |
+| Registered full study, completed with exploratory fallback | Imagenette: 7,575 train, 1,894 dev, 3,875 reserved test images | 4096 × 3 / 48; scalar 12288 × 1 / 48 | Equal LR pilot; frozen five seeds × one epoch; Adam; no curriculum | All 25 runs complete; [scores and uncertainty](study/summary.md), [findings and audit](study/findings.md); primary comparison inconclusive |
 
 ## Engineering findings, 2026-10-27
 
@@ -94,3 +94,17 @@ specifies five paired seeds and one common epoch without extending the original 
 now reuses unchanged QR frames within each call; training still differentiates through fresh QR frames.
 The new failure and inference-parity tests were written first, failed as expected, and the complete
 23-test suite passed after the fixes. This recovery does not establish a result on the reserved test set.
+
+## Completed study and final review, 2026-10-27
+
+The frozen 25-run schedule completed without further interruption or extra exposure. All training
+finished before final testing. The primary block contrast was inconclusive; the secondary scalar
+contrast favored KL, while reconstruction and spatial smoothness were worse for the block KL solution.
+The [full findings](study/findings.md) explain the effect sizes, limitations, interventions, timing and
+the post-pilot amendment. Per-seed reports and raw prediction bundles retain every completed outcome.
+
+An independent artifact audit recomputed forward KL, accuracy and the paired interval, and checked all
+checkpoint hashes, source pins, whole-image exposure, duplicate-group isolation and frozen buffers.
+The audit passed. Final presentation changes add seed intervals for every displayed metric and show
+all training seeds in separate condition panels; they do not alter measured outcomes. Two new tests
+were written first and failed before this uncertainty-display change; all 25 tests now pass.
