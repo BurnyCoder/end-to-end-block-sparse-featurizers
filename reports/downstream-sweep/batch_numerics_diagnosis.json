@@ -1,0 +1,116 @@
+[
+  {
+    "batch_size": 2,
+    "images": [
+      0,
+      1
+    ],
+    "states": [
+      {
+        "block": 6,
+        "max_absolute": 0.0068359375,
+        "rms": 2.1099564037285745e-05,
+        "violations": 0
+      },
+      {
+        "block": 7,
+        "max_absolute": 0.0068359375,
+        "rms": 2.302252505614888e-05,
+        "violations": 0
+      },
+      {
+        "block": 8,
+        "max_absolute": 0.0068359375,
+        "rms": 2.540769855841063e-05,
+        "violations": 1
+      },
+      {
+        "block": 9,
+        "max_absolute": 0.006591796875,
+        "rms": 3.066389763262123e-05,
+        "violations": 4
+      },
+      {
+        "block": 10,
+        "max_absolute": 0.01025390625,
+        "rms": 4.550063022179529e-05,
+        "violations": 25
+      },
+      {
+        "block": 11,
+        "max_absolute": 0.02734375,
+        "rms": 8.392384188482538e-05,
+        "violations": 124
+      },
+      {
+        "block": 12,
+        "max_absolute": 0.02734375,
+        "rms": 9.908540960168466e-05,
+        "violations": 200
+      }
+    ],
+    "identity_max_mse": 1.230178128253101e-07,
+    "teacher_logit_max_difference": 1.049041748046875e-05,
+    "identity_logit_max_difference": 1.1205673217773438e-05
+  },
+  {
+    "batch_size": 8,
+    "images": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      7,
+      10
+    ],
+    "states": [
+      {
+        "block": 6,
+        "max_absolute": 0.0,
+        "rms": 0.0,
+        "violations": 0
+      },
+      {
+        "block": 7,
+        "max_absolute": 0.0,
+        "rms": 0.0,
+        "violations": 0
+      },
+      {
+        "block": 8,
+        "max_absolute": 0.0,
+        "rms": 0.0,
+        "violations": 0
+      },
+      {
+        "block": 9,
+        "max_absolute": 0.0,
+        "rms": 0.0,
+        "violations": 0
+      },
+      {
+        "block": 10,
+        "max_absolute": 0.0,
+        "rms": 0.0,
+        "violations": 0
+      },
+      {
+        "block": 11,
+        "max_absolute": 0.0,
+        "rms": 0.0,
+        "violations": 0
+      },
+      {
+        "block": 12,
+        "max_absolute": 0.0,
+        "rms": 0.0,
+        "violations": 0
+      }
+    ],
+    "identity_max_mse": 0.0,
+    "teacher_logit_max_difference": 0.0,
+    "identity_logit_max_difference": 0.0
+  }
+]

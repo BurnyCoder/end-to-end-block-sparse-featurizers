@@ -1,0 +1,55 @@
+{
+  "status": "incomplete",
+  "spec": {
+    "root": "outputs/sweeps/downstream-v1",
+    "source_root": "outputs/study",
+    "cache_dir": "D:/AI/end-to-end-block-sparse-featurizers/downstream-v1",
+    "report_dir": "reports/downstream-sweep",
+    "device": "cuda",
+    "insertion_block": 6,
+    "groups": 4096,
+    "block_size": 3,
+    "active_blocks": [
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "downstream_weights": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "learning_rates": [
+      0.0001,
+      0.0003
+    ],
+    "seed": 200,
+    "pilot_seed": 900,
+    "microbatch": 8,
+    "effective_batch": 32,
+    "max_epochs": 20,
+    "max_hours": 24.0,
+    "preparation_hours": 2.0,
+    "evaluation_hours": 2.0,
+    "pilot_train_images": 510,
+    "pilot_dev_images": 250,
+    "bootstrap_replicates": 2000
+  },
+  "started_unix": 1793124002.5009177,
+  "preparation_deadline_unix": 1793131202.5009177,
+  "optimization_deadline_unix": 1793203202.5009177,
+  "deadline_unix": 1793210402.5009177,
+  "source_revision": "c5a99ef1439374c94ad249db7a73554a8d7f2b4e",
+  "updated_unix": 1793131202.5225847,
+  "previous_failures": [
+    {
+      "repair": "PR #12: match verification batch geometry; tolerances and deadlines unchanged",
+      "error": "Tensor-likes are not close!\n\nMismatched elements: 1 / 308736 (0.0%)\nGreatest absolute difference: 0.0001277923583984375 at index (0, 1, 367) (up to 0.0001 allowed)\nGreatest relative difference: 0.0009009735658764839 at index (0, 1, 367) (up to 0.0001 allowed)",
+      "at_unix": 1793128087.8127675
+    }
+  ],
+  "resumed_source_revision": "58751c0d3d0fa85727960cf115facfe18e3a2e12",
+  "error": "The original sweep stage deadline has elapsed"
+}
