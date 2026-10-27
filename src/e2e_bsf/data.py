@@ -35,6 +35,15 @@ def assign_splits(rows, seed=42):
     return rows
 
 
+def exclude_previewed_test_groups(rows, previewed):
+    """Local: identity-only exclusion; global: engineering inspection cannot contaminate confirmation."""
+    groups = {row["group"] for row in rows if row["id"] in previewed}  # Include transitive duplicates.
+    for row in rows:
+        if row["split"] == "test" and row["group"] in groups:
+            row["split"] = "excluded"  # Never reuse inspected test examples for headline evidence.
+    return groups  # Persist the exclusion rule's complete effect for audit.
+
+
 def prepare_manifest(config, logger):
     """Local: hash all source images; global: no model is fitted before split audit."""
     from torchvision.datasets import Imagenette  # Import lazily for offline unit tests.
@@ -83,6 +92,11 @@ def prepare_manifest(config, logger):
     for i, row in enumerate(rows):
         row["group"] = find(i)  # Materialize final connected components before splitting.
     assigned = assign_splits(rows, config.seed)
+    smoke_manifest = root.parent / "smoke" / "manifest.json"
+    previewed_groups = set()
+    if config.profile == "full" and smoke_manifest.exists():
+        previewed = {row["id"] for row in read_json(smoke_manifest)["images"] if row["split"] == "test"}
+        previewed_groups = exclude_previewed_test_groups(assigned, previewed)
     selected = [row for row in assigned if row["split"] != "excluded"]
     if config.profile == "smoke":  # Deterministic, stratified real-image slice, never a headline study.
         rng = np.random.default_rng(config.seed)
@@ -98,8 +112,10 @@ def prepare_manifest(config, logger):
                                               "all_images": assigned})
     write_json(manifest_path, {"seed": config.seed, "profile": config.profile,
                                "counts": dict(Counter(row["split"] for row in selected)),
+                               "excluded_engineering_test_groups": sorted(previewed_groups),
                                "images": selected})
     log_event(logger, "manifest", {"selected": len(selected),
                                    "counts": dict(Counter(row["split"] for row in selected)),
-                                   "excluded_train_overlap": sum(row["split"] == "excluded" for row in assigned)})
+                                   "excluded_train_overlap": sum(row["split"] == "excluded" and row["official_split"] == "train" for row in assigned),
+                                   "excluded_engineering_test_groups": len(previewed_groups)})
     return selected
