@@ -1,0 +1,11 @@
+2026-10-27T20:08:11Z INFO bsf_experiments.sweep-publish.20261027T200808.053369Z event=sweep_command payload={"phase":"publish","spec":{"root":"outputs/sweeps/downstream-v1","source_root":"outputs/study","cache_dir":"D:/AI/end-to-end-block-sparse-featurizers/downstream-v1","report_dir":"reports/downstream-sweep","device":"cuda","insertion_block":6,"groups":4096,"block_size":3,"active_blocks":[4,8,16,32,64],"downstream_weights":[0.0001,0.001,0.01],"learning_rates":[0.0001,0.0003],"seed":200,"pilot_seed":900,"microbatch":8,"effective_batch":32,"max_epochs":20,"max_hours":24.0,"preparation_hours":2.0,"evaluation_hours":2.0,"pilot_train_images":510,"pilot_dev_images":250,"bootstrap_replicates":2000},"log":"outputs\\sweeps\\downstream-v1\\logs\\20261027T200808.053369Z-sweep-publish.log"}
+2026-10-27T20:08:15Z ERROR bsf_experiments.sweep-publish.20261027T200808.053369Z Sweep stopped; preserve original deadlines and inspect this complete log
+Traceback (most recent call last):
+  File "C:\Users\Happy\Documents\projects\end-to-end-block-sparse-featurizers\src\e2e_bsf\sweep\cli.py", line 69, in main
+    run(spec, logger, args.phase, args.cell)
+  File "C:\Users\Happy\Documents\projects\end-to-end-block-sparse-featurizers\src\e2e_bsf\sweep\pipeline.py", line 81, in run
+    return publish(spec, logger)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Happy\Documents\projects\end-to-end-block-sparse-featurizers\src\e2e_bsf\sweep\publication.py", line 88, in publish
+    raise RuntimeError("No completed evaluated sweep models are available; no remote collection or upload was created")
+RuntimeError: No completed evaluated sweep models are available; no remote collection or upload was created
