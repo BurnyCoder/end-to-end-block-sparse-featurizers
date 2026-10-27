@@ -15,6 +15,8 @@ def write_paper(destination, evidence):
     styles.add(ParagraphStyle(name="Small", parent=styles["BodyText"], fontSize=8, leading=10))
     styles["BodyText"].leading = 13
     styles["BodyText"].spaceAfter = 9
+    # Keep section labels with their prose: https://docs.reportlab.com/reportlab/userguide/ch6_paragraphs/.
+    styles["Heading2"].keepWithNext = True
     story = []
 
     def paragraph(text, style="BodyText"):
@@ -84,7 +86,8 @@ def write_paper(destination, evidence):
               "uncertainty or power claim is available. Reconstruction-weight comparisons are descriptive secondary analyses. "
               "A mean advantage does not imply dominance at every sparsity or at unmeasured operating points.")
     heading("4. Results, controls and claims")
-    paragraph(escape(evidence["narrative"]))
+    if evidence["runs"]:
+        paragraph(escape(evidence["narrative"]))
     progress = evidence["progress"]
     paragraph(f"Execution inventory: {progress['pilot_completed']}/{progress['pilot_planned']} completed pilots; "
               f"{progress['pilot_started']} started pilots; {progress['main_started']}/25 started main runs; "
@@ -165,7 +168,9 @@ def write_paper(destination, evidence):
               "or sparse codes do not establish full representation preservation, genuine concepts, or faster inference. "
               "Raw downstream MSE can emphasize high-variance layers and special tokens; separate patch/special and normalized "
               "diagnostics expose this issue. One seed, short training, reused test data, and a two-value LR search limit generalization. "
-              "Objective comparisons include their selected LRs. Known study duplicates are isolated; unknown backbone pretraining overlap is unresolved.")
+              + ("Objective comparisons include their selected LRs. " if evidence["runs"] else
+                 "The registered main comparison would include development-selected LRs; none were selected in this allocation. ") +
+              "Known study duplicates are isolated; unknown backbone pretraining overlap is unresolved.")
     heading("6. Conclusion")
     paragraph(escape(evidence["narrative"]))
     heading("References and reproducibility")
