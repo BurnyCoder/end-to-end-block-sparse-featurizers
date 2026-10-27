@@ -24,7 +24,7 @@ patch reconstruction; this illustrates why both metrics are necessary, without e
 On a fixed pair of real training images, the online and cached patch tensors, KL, and BSF gradients
 matched exactly in float32. Identity replacement gave zero KL. Replacing patches with zeros gave
 KL 19.498661, confirming the classifier uses the intervened path. Fifty fixed-batch optimization steps
-reduced KL from 11.633245 to 0.027980; the trajectory was not monotonic. These are implementation checks,
+reduced KL from 11.633245 to 0.027983; the trajectory was not monotonic. These are implementation checks,
 not held-out performance claims. Raw measurements are in `outputs/smoke/verification.json`.
 
 Initial cache extraction stopped at image 284 after a Windows sharing violation during atomic JSON
@@ -50,8 +50,8 @@ Hyperparameters for the full experiment follow the preregistration, including eq
 search, paired initialization and data order, common image exposure, a bounded compute budget and
 pilot-based power calculation. Pilot seeds never enter the final paired contrast. No test result
 chooses a learning rate, epoch count, seed count or visualization block. Semantic recovery and broad
-DINO information preservation remain untested. The full study may be exploratory if power or compute
-requirements cannot be met; significance is never an acceptance requirement.
+DINO information preservation remain untested. The completed full study is exploratory because its
+pilot power target was not met; significance was never an acceptance requirement.
 
 ## Final implementation review
 
@@ -108,3 +108,8 @@ checkpoint hashes, source pins, whole-image exposure, duplicate-group isolation 
 The audit passed. Final presentation changes add seed intervals for every displayed metric and show
 all training seeds in separate condition panels; they do not alter measured outcomes. Two new tests
 were written first and failed before this uncertainty-display change; all 25 tests now pass.
+
+The subsequent [plan completion audit](../docs/plan-completion.md) maps each requirement to its evidence.
+It reran all 25 tests and the independent checkpoint/prediction audit, rechecked the public collection,
+and confirmed that the live site's data and PDF match the published artifacts. It also corrects stale
+status wording in the historical pilot record; no experimental outcome or frozen allocation changed.

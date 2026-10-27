@@ -14,6 +14,7 @@ power estimate was 77.5%, below the 80% target, and training was short. Block KL
 6.78%, but its paired interval spans zero. Reconstruction error increased by 44.41%.
 See the [findings and independent audit](reports/study/findings.md) and
 [disclosed pilot allocation amendment](reports/study/pilot.md).
+The [plan completion checklist](docs/plan-completion.md) maps the requirements to verified artifacts and limitations.
 
 Download all 25 BSFs, frozen classifiers and normalization statistics from the
 [Hugging Face collection](https://huggingface.co/collections/BurnyCoder/end-to-end-bsfs-on-dinov3-full-6ae0a9d519d3d32881f784b8).
