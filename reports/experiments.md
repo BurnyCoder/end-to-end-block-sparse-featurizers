@@ -2,7 +2,7 @@
 
 This ledger links complete measured reports; it does not select favorable seeds or runs.
 Definitions: **KL** is the original-to-reconstructed class-distribution divergence, in nats per image;
-**NMSE** is squared patch reconstruction error divided by the training RMS scale squared;
+**NMSE** is reconstruction error divided by training variance (patches in the original study; all tokens and region-specific diagnostics in the follow-up);
 **block** is a group of jointly selected signed coordinates; **active** means selected by block TopK.
 The teacher is the fixed DINOv3 plus Imagenette logistic readout, not a native DINO classifier.
 See the [method](../docs/preregistration.md) and [source review](../docs/literature-review.md).
@@ -11,7 +11,7 @@ See the [method](../docs/preregistration.md) and [source review](../docs/literat
 |---|---|---|---|---|
 | Engineering smoke, seed 100 | Imagenette: 200 train, 50 dev, 50 test images | 32 × 3 blocks / 12 coordinates; scalar 96 × 1 / 12 | Adam; 3 epochs; five MSE/KL/mixed conditions; no curriculum | All five complete; [scores, curves, maps and limitations](smoke/summary.md) |
 | Registered full study, completed with exploratory fallback | Imagenette: 7,575 train, 1,894 dev, 3,875 reserved test images | 4096 × 3 / 48; scalar 12288 × 1 / 48 | Equal LR pilot; frozen five seeds × one epoch; Adam; no curriculum | All 25 runs complete; [scores and uncertainty](study/summary.md), [findings and audit](study/findings.md); primary comparison inconclusive |
-| Block-6 downstream sweep, registered; not yet executed | Same Imagenette splits, with explicit reuse of the previously analyzed test set | 4096 × 3; 12–192 active coordinates; reconstruct all 201 tokens | One main seed; full k × objective/beta grid; new 24-hour bound | [Separate preregistration](../docs/downstream-preregistration.md); no measured effectiveness result yet |
+| Block-6 downstream sweep, preparation allocation failed | Same Imagenette splits; explicit planned reuse of the previously analyzed test set | 4096 × 3; 12–192 planned active coordinates; all 201 tokens | 15/50 seed-900 pilots complete, one additional trained-only pilot; no seed-200 main run | [Report and full inventory](downstream-sweep/summary.md), [audit](downstream-sweep/audit.json), [execution notes](../docs/downstream-execution-notes.md); primary hypothesis unmeasured |
 
 ## Engineering findings, 2026-10-27
 

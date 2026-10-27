@@ -46,3 +46,37 @@ def test_complete_report_uses_paired_predictions(tmp_path, monkeypatch):
     assert len(evidence["runs"]) == 25 and len(evidence["secondary"]) == 3
     assert Path("report/paper.pdf").read_bytes().startswith(b"%PDF")
     assert Path("site/sweep/data.json").exists() and Path("report/figures/maps.png").exists()
+
+
+def test_incomplete_pilot_is_reported_without_main_results(tmp_path, monkeypatch):
+    """A preparation timeout produces a failure report, without pretending missing scores are zero."""
+    monkeypatch.chdir(tmp_path)
+    spec = replace(SweepSpec(), root="fixture", report_dir="report", bootstrap_replicates=20)
+    root = Path(spec.root)
+    write_json(root / "study_status.json", {"status": "incomplete", "error": "The original sweep stage deadline has elapsed"})
+    write_json(root / "manifest.json", {"counts": {"train": 4, "dev": 4, "test": 4}})
+    run = root / "runs" / "pilot_k004_mse_lr0.0001"
+    write_json(run / "run.json", {"status": "trained_epoch", "epoch": 1, "images_seen": 510, "updates": 16})
+    (run / "history.jsonl").write_text(json.dumps({"images_seen": 510, "kl": 2.}) + "\n")
+    evidence = report(spec, logging.getLogger("failed_report_fixture"))
+    assert evidence["progress"]["pilot_completed"] == 0
+    assert evidence["progress"]["pilot_started"] == 1
+    assert len(evidence["progress"]["pilot_trials"]) == 50
+    assert evidence["primary"] is None and not evidence["runs"]
+    assert "Allocation failure" in evidence["narrative"]
+    assert "No main runs" in evidence["narrative"]
+    assert Path("report/pilots/pilot_k004_mse_lr0.0001.md").exists()
+    assert "figures/curves.png" not in Path("report/summary.md").read_text()
+
+
+def test_publish_without_evaluated_main_models_has_no_remote_side_effect(tmp_path, monkeypatch):
+    """An allocation failure cannot create an empty public collection or authenticate unnecessarily."""
+    import pytest
+    from e2e_bsf.sweep import publication
+
+    def unexpected_access():
+        raise AssertionError("Remote access must follow the local eligibility check")
+
+    monkeypatch.setattr(publication, "check_access", unexpected_access)
+    with pytest.raises(RuntimeError, match="No completed evaluated"):
+        publication.publish(replace(SweepSpec(), root=str(tmp_path)), logging.getLogger("empty_publication"))

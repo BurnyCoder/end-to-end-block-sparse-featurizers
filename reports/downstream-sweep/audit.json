@@ -1,0 +1,148 @@
+{
+  "passed": true,
+  "audited_utc": "2026-10-27T20:07:06.630378+00:00",
+  "scope": "stopped preparation allocation only",
+  "execution_summary": "Preparation completed after approximately 68 minutes: extraction took 26.5 minutes, training-only statistics about 23.4 minutes, and final cache hashing about 17.7 minutes. A batch-geometry verification failure stopped the worker at 19:08 UTC and was detected at 19:31 UTC. The repaired check passed at 19:37 UTC; pilots resumed at 19:38 UTC. The two-hour preparation deadline stopped the 16th trial during development evaluation at 20:00:02 UTC. Fifteen trials completed, one had trained but lacked a development endpoint, and 34 never started. No main schedule, selected learning rates, main training or test evaluation followed. The bottleneck was the preparation allocation, not a measured scientific failure of KL training.",
+  "completed_pilots": 15,
+  "incomplete_pilots": 1,
+  "unstarted_pilots": 34,
+  "main_runs": 0,
+  "main_test_evaluations": 0,
+  "shared_initial_sha256": "e358b0b361ca7aca22164b40b8ba77896e3a3291c54a5ebe5c6de5a2f8c24d5e",
+  "shared_training_order_sha256": "f334f7dc9b2a2aed377e71dcd362a50c628c9968cc88a4d4c824eb113f657f84",
+  "checkpoints": [
+    {
+      "trial": "pilot_k004_downstream_b0.0001_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130531.1652374,
+      "checkpoint_sha256": "f88d7f4dec47121727c203f1defd985a08c4ef2d058932a47a971a050578ec9a"
+    },
+    {
+      "trial": "pilot_k004_downstream_b0.0001_lr0.0003",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130599.5656002,
+      "checkpoint_sha256": "71e46fcdfcae1ad34372e467187f243279865ac6c5fe13b24195248d60a94091"
+    },
+    {
+      "trial": "pilot_k004_downstream_b0.001_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130656.5826035,
+      "checkpoint_sha256": "c8ee55f7e8bcafe177e79c49fc188b0684d9829951b59a15102239e0e45a802a"
+    },
+    {
+      "trial": "pilot_k004_downstream_b0.001_lr0.0003",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130718.489617,
+      "checkpoint_sha256": "ffdd55e864943503a2065ff2a8e5bc6546f9ca90f3db93a4297044e60c800810"
+    },
+    {
+      "trial": "pilot_k004_downstream_b0.01_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130780.0369112,
+      "checkpoint_sha256": "3b27b99b6c10475a8c6d3cec9fc21db4bc6b2745b98001db0a927241e2ab7948"
+    },
+    {
+      "trial": "pilot_k004_downstream_b0.01_lr0.0003",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130843.7990942,
+      "checkpoint_sha256": "1bba024adcde07ad9ee5c6101de80963705d724525aa5eeccafbd838cddc1cd2"
+    },
+    {
+      "trial": "pilot_k004_kl_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130396.8907168,
+      "checkpoint_sha256": "a2bae27e4906c09874b7a9aeddf4c329cea8dc453c0ba6c9a291f947c8ddf00f"
+    },
+    {
+      "trial": "pilot_k004_kl_lr0.0003",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130464.0992324,
+      "checkpoint_sha256": "17f8993b46a803ea7cdf869e794104ac2ec4037ec86511de93b00379a8356f9d"
+    },
+    {
+      "trial": "pilot_k004_mse_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130225.0198662,
+      "checkpoint_sha256": "c15b01c95f98f3fac167c6655678f13f349fd385d13c0efe810b7bef2f185268"
+    },
+    {
+      "trial": "pilot_k004_mse_lr0.0003",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130316.277995,
+      "checkpoint_sha256": "23ecffe1f991b3f32424d5284326cdd4f505a836b0ddd7b6de19c42e8d257837"
+    },
+    {
+      "trial": "pilot_k008_downstream_b0.0001_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793131143.551529,
+      "checkpoint_sha256": "1e39746a988d1fb16e2daa70b34def88c9cd0ecd897f8cd387336e3b87d01582"
+    },
+    {
+      "trial": "pilot_k008_downstream_b0.0001_lr0.0003",
+      "status": "trained_epoch",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793131201.196679,
+      "checkpoint_sha256": "578d96c6e6eb9291b4c52e96dd32af96ad96fd2e2400c4b44446d6123fde8695"
+    },
+    {
+      "trial": "pilot_k008_kl_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793131023.7463381,
+      "checkpoint_sha256": "b6f2eb422fc289bf959bcffe086c1352ceb97136db649a4d03498ab22c995fd5"
+    },
+    {
+      "trial": "pilot_k008_kl_lr0.0003",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793131083.1933365,
+      "checkpoint_sha256": "12583ddb9f2a501d9e28008e2209c1aecd63ae221ee5810ff47879ebd39a3727"
+    },
+    {
+      "trial": "pilot_k008_mse_lr0.0001",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130904.7993412,
+      "checkpoint_sha256": "dafbbaef29500ba4b5851705788d048a9d6c6f9d4b5b4421dd1ebf97f16c14f7"
+    },
+    {
+      "trial": "pilot_k008_mse_lr0.0003",
+      "status": "complete",
+      "updates": 16,
+      "images_seen": 510,
+      "saved_unix": 1793130963.7133934,
+      "checkpoint_sha256": "8cb9a97a7ef4a942010775100ea7d057e5b36e88a35ed33b6233783acfdaabf5"
+    }
+  ],
+  "source_teacher_unchanged": true,
+  "split_groups_isolated": true,
+  "cache_integrity_check": "complete extraction SHA-256 records and unchanged current sizes/mtimes; 58 GB not rehashed in this audit",
+  "stage_deadline_stop_seconds": 0.021667003631591797,
+  "scientific_conclusion": "primary hypothesis and sparsity advantage unmeasured"
+}
