@@ -10,7 +10,7 @@ See the [method](../docs/preregistration.md) and [source review](../docs/literat
 | Experiment | Domain and data | Architecture / active coordinates | Training | Completion and evidence |
 |---|---|---|---|---|
 | Engineering smoke, seed 100 | Imagenette: 200 train, 50 dev, 50 test images | 32 × 3 blocks / 12 coordinates; scalar 96 × 1 / 12 | Adam; 3 epochs; five MSE/KL/mixed conditions; no curriculum | All five complete; [scores, curves, maps and limitations](smoke/summary.md) |
-| Registered full study | Imagenette, grouped 80/20 official training; reserved validation less engineering-preview groups | 4096 × 3 / 48; scalar 12288 × 1 / 48 | Equal LR pilot; freeze 5–10 seeds and ≤20 common epochs before test | Not started at ledger creation; durable live status is `outputs/study/study_status.json` |
+| Registered full study | Imagenette: 7,575 train, 1,894 dev, 3,875 reserved test images | 4096 × 3 / 48; scalar 12288 × 1 / 48 | Equal LR pilot; freeze 5–10 seeds and ≤20 common epochs before test | In progress: cache and head complete, pilot grid running; durable live status is `outputs/study/study_status.json` |
 
 ## Engineering findings, 2026-10-27
 
@@ -52,3 +52,20 @@ pilot-based power calculation. Pilot seeds never enter the final paired contrast
 chooses a learning rate, epoch count, seed count or visualization block. Semantic recovery and broad
 DINO information preservation remain untested. The full study may be exploratory if power or compute
 requirements cannot be met; significance is never an acceptance requirement.
+
+## Final implementation review
+
+Fifteen focused tests pass locally and in GitHub Actions. The review covered KL orientation and
+reduction, exact released-architecture output/gradient parity, QR constraints, whole-image grouping,
+frozen readout/backbone paths, split isolation, partial batches, checkpoint identity, and deterministic
+resume including an interrupted history write. No model equation changed after the smoke result.
+The published safe-tensor bundle reproduced a saved checkpoint's inserted probabilities within
+1.5e-7 on one real image; this is a portability check, not a new test-score estimate.
+
+The explorer's metric, condition, example and block selectors were exercised in the browser;
+no console errors were recorded. All pages of the generated PDF were rendered and inspected.
+GitHub Pages serves measured smoke evidence, and all five smoke models, their fixed classifiers,
+normalization, split manifests and provenance are in the linked Hugging Face collection.
+Small verification records and publication URLs are retained in [smoke/verification.json](smoke/verification.json),
+[smoke/publication_roundtrip.json](smoke/publication_roundtrip.json), and
+[smoke/publication.json](smoke/publication.json).
