@@ -157,7 +157,8 @@ def report(spec, logger):
             "Fixed maps and interventions at k=16 are exploratory; inactive blocks and approximate random matching are retained. "
             "All measured arrays, settings and histories are available in results.json and the individual model bundles.\n")
     (destination / "summary.md").write_text(body, encoding="utf-8")
-    for filename in ("study_status.json", "study_schedule.json", "pilot.json", "verification.json", "cache.json", "publication.json"):
+    for filename in ("study_status.json", "study_schedule.json", "pilot.json", "verification.json", "cache.json", "publication.json",
+                     "deviations.json", "batch_numerics_diagnosis.json"):
         if (root / filename).exists():
             shutil.copy2(root / filename, destination / filename)
     from .paper import write_paper

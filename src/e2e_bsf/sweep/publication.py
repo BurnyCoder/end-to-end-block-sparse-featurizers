@@ -14,6 +14,7 @@ from ..logging_utils import log_event
 FILES = ("model.safetensors", "config.json", "manifest.json", "duplicate_audit.json", "source_teacher.json",
          "study_schedule.json", "study_status.json", "pilot.json", "verification.json", "cache.json",
          "metrics.json", "test_predictions.npz", "history.jsonl", "diagnostics.json", "run.json",
+         "deviations.json", "batch_numerics_diagnosis.json",
          "GOODFIRE_LICENSE", "LICENSE", "README.md")
 
 
