@@ -14,7 +14,7 @@ import torch  # Frozen readouts still propagate gradients to the BSF.
 from .config import MODEL_ID, MODEL_REVISION, BSF_REVISION, CONDITIONS
 from .evaluation import load_teacher, measure
 from .featurizer import GrassmannianBSF, reconstruct
-from .io import read_json, write_json, save_checkpoint, load_checkpoint, digest, source_revision
+from .io import read_json, write_json, save_checkpoint, load_checkpoint, digest, source_revision, restore_history
 from .logging_utils import log_event
 from .objectives import forward_kl, objective
 
@@ -99,6 +99,7 @@ def train_one(config, condition, seed, logger, run_name=None, deadline=None, max
     started = time.monotonic()
     revision = previous["source_revision"] if previous else source_revision()  # Preserve the code identity at run start.
     history_path = run / "history.jsonl"
+    restore_history(history_path, updates)  # Archive any work lost since the last durable checkpoint.
     objective_name = condition.split("_", 1)[1]
 
     def checkpoint_state(status):

@@ -8,6 +8,7 @@ import hashlib  # Bind files to their exact contents.
 import json  # Human-readable metadata is the source of truth.
 from pathlib import Path  # Use platform-neutral paths.
 import subprocess  # Record the current source revision without shell interpolation.
+import shutil  # Archive uncommitted history before replacing its active view.
 import time  # Bounded retries handle transient Windows scanner/share locks.
 import torch  # Persist tensor-only checkpoints.
 
@@ -46,6 +47,29 @@ def atomic_replace(source, destination):
 def read_json(path):
     """Local: UTF-8 decode; global: shared metadata interpretation."""
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def restore_history(path, updates):
+    """Local: align JSONL with the durable checkpoint; global: crash recovery cannot duplicate exposure.
+
+    Python JSON/atomic-file APIs are used here; interrupted raw output is archived, never discarded.
+    """
+    path = Path(path)
+    if not path.exists():
+        if updates:
+            raise RuntimeError("Checkpoint history is missing; cannot reconstruct recorded evidence")
+        return
+    original = path.read_text(encoding="utf-8")
+    lines = original.splitlines()  # Only the first checkpointed updates are committed evidence.
+    retained = lines[:updates]
+    if len(retained) != updates or [json.loads(line)["update"] for line in retained] != list(range(1, updates + 1)):
+        raise RuntimeError("History before the checkpoint is corrupted; refusing to fabricate it")
+    restored = "".join(line + "\n" for line in retained)
+    if restored != original:
+        shutil.copy2(path, path.with_name(f"history.pre-resume-{time.time_ns()}.jsonl"))
+        temporary = path.with_suffix(".tmp")
+        temporary.write_text(restored, encoding="utf-8")
+        atomic_replace(temporary, path)  # Readers never see a half-repaired JSONL file.
 
 
 def save_checkpoint(path, state):

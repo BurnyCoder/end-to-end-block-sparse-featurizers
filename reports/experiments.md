@@ -32,6 +32,13 @@ replacement. We added bounded retries only for Windows sharing/access errors, wr
 and resumed the same cache to 300 images. We retained atomic replacement rather than copying a partial
 file. This fix affects artifact reliability, not model equations. The complete CLI then finished.
 
+A final review exposed another interruption edge case: model resume was bitwise correct, but a crash
+after the last checkpoint could leave duplicate updates or a partial JSON line in the plotted history.
+A failing interruption test reproduced this. Resume now archives all original history, retains only
+the checkpointed update prefix, and appends recovered training to that verified prefix. This changes
+artifact recovery, not training mathematics or the prespecified analysis. The preparation process was
+restarted to load this fix before full pilot training; the original wall-time deadline was retained.
+
 The duplicate screen found one perceptually close pair among all 13,394 source images and no
 training/validation overlap under the prespecified SHA-256/pHash rule. This cannot certify absence of
 all semantic duplicates. Engineering test images and their detected duplicate groups are excluded
