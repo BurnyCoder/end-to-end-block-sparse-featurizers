@@ -40,3 +40,28 @@ class VisionFeaturizer:
         modified, _, mse = reconstruct(self.featurizer, self.normalization, patches)
         return {"original": self.probe(patches).softmax(-1).cpu(),
                 "inserted": self.probe(modified).softmax(-1).cpu(), "normalized_mse": float(mse)}
+
+
+class IntermediateVisionFeaturizer(VisionFeaturizer):
+    """Load a block-6 safe bundle with the shared loader, then execute its frozen suffix."""
+
+    def __init__(self, directory, device="cuda"):
+        """Require the complete-state intervention metadata; never infer a different insertion site."""
+        metadata = read_json(Path(directory) / "config.json")
+        if metadata.get("insertion_block") != 6 or metadata.get("sequence_scope") != "all_201":
+            raise ValueError("Expected a registered block-6 all-token sweep bundle")
+        super().__init__(directory, device)
+        from .sweep.core import FrozenSuffix
+        self.suffix = FrozenSuffix.from_backbone(self.backbone, self.probe, 6)
+
+    @torch.no_grad()
+    def predict(self, images):
+        """Use reconstructed special tokens as well as patches; return original and inserted outputs."""
+        from .sweep.core import clean_states
+        pixels = self.processor(images=images, return_tensors="pt").to(self.device)["pixel_values"]
+        states = clean_states(self.backbone, pixels, 6)
+        modified, _, mse = reconstruct(self.featurizer, self.normalization, states[0])
+        logits, _ = self.suffix(modified)
+        original = self.probe(self.backbone.norm(states[-1])[:, 5:])
+        return {"original": original.softmax(-1).cpu(), "inserted": logits.softmax(-1).cpu(),
+                "normalized_mse": float(mse)}
