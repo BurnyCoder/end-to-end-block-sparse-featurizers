@@ -1,6 +1,7 @@
 """Global: trustworthy execution. Local: real optimizer, checkpoints, and partial batches."""
 
 from pathlib import Path
+import json
 import logging
 import numpy as np
 import torch
@@ -37,6 +38,9 @@ def test_resume_matches_uninterrupted_and_handles_remainder(tmp_path):
     partial_path = train_one(resumed, "block_kl", 100, logger, max_updates=1)
     partial = load_checkpoint(partial_path)
     assert partial["offset"] == 4 and partial["status"] == "paused"
+    history = partial_path.parent / "history.jsonl"
+    with history.open("a", encoding="utf-8") as stream:
+        stream.write('{"update": 2, "kl": 999}\n{"update":')  # Simulate work lost after the durable checkpoint.
     final_path = train_one(resumed, "block_kl", 100, logger)
     left, right = load_checkpoint(complete_path), load_checkpoint(final_path)
     assert left["updates"] == right["updates"] == 4
@@ -44,3 +48,5 @@ def test_resume_matches_uninterrupted_and_handles_remainder(tmp_path):
     for name in left["model"]:
         torch.testing.assert_close(left["model"][name], right["model"][name], rtol=0, atol=0)
     assert digest(Path(resumed.root) / "teacher.pt") == teacher_hash
+    assert [json.loads(line)["update"] for line in history.read_text().splitlines()] == [1, 2, 3, 4]
+    assert list(history.parent.glob("history.pre-resume-*.jsonl"))  # Raw interrupted evidence is retained.
