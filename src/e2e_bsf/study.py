@@ -51,17 +51,22 @@ def freeze_schedule(config, records, optimization_seconds):
                               if row["condition"] == condition and row["lr"] == selected[condition]}
     power = required_seeds(primary["block_mse"], primary["block_kl"])
     required = power.get("required")
-    seeds = min(10, max(5, required)) if required is not None else 10
+    requested_seeds = min(10, max(5, required)) if required is not None else 10
     counts = read_json(root / "manifest.json")["counts"]
     seconds_per_epoch = {condition: 1.25 * max(row["seconds"] for row in records if row["condition"] == condition)
                         / 760 * (counts["train"] + counts["dev"]) for condition in CONDITIONS}
+    seed_capacity = int(optimization_seconds // sum(seconds_per_epoch.values()))  # Complete all conditions at least once per seed.
+    seeds = min(requested_seeds, seed_capacity)  # The preregistered exploratory fallback retains the five-seed minimum.
+    if seeds < 5:
+        raise TimeoutError("One common epoch across all conditions and at least five seeds cannot fit")
     seconds_per_paired_epoch = seeds * sum(seconds_per_epoch.values())  # Sum measured condition costs; exposure stays equal.
     epochs = min(20, int(optimization_seconds // seconds_per_paired_epoch))
-    if epochs < 1:
-        raise TimeoutError("At least one common epoch across the required conditions/seeds cannot fit")
     schedule = {"seeds": list(range(100, 100 + seeds)), "epochs": epochs, "learning_rates": selected,
                 "microbatch": min(row["microbatch"] for row in records), "conditions": list(CONDITIONS),
                 "power": power, "exploratory": required is None or required > seeds,
+                "requested_seed_count": requested_seeds,
+                "allocation_reason": "replication_reduced_to_fit_original_budget" if seeds < requested_seeds else "requested_replication_within_budget",
+                "available_optimization_seconds": optimization_seconds,
                 "predicted_optimization_seconds": epochs * seconds_per_paired_epoch,
                 "forecast_seconds_per_epoch": seconds_per_epoch,
                 "manifest_sha256": digest(root / "manifest.json"), "source_revision": source_revision(),
@@ -102,7 +107,9 @@ def run_study(config, logger):
         else:
             schedule = read_json(schedule_path)
             optimization_deadline = schedule["optimization_deadline_unix"]
-        status.update(status="training", schedule=schedule)
+        if "error" in status:
+            status.setdefault("previous_failures", []).append({"error": status.pop("error"), "at_unix": status.get("updated_unix")})
+        status.update(status="training", schedule=schedule, updated_unix=time.time())
         write_json(status_path, status)
         log_event(logger, "frozen_study_schedule", schedule)
         for seed in schedule["seeds"]:

@@ -83,3 +83,14 @@ wall-time limit. Short affordable training remains a limitation and is reported 
 The allocation test also exposed a statsmodels root-finder failure at extremely large standardized
 pilot effects. Power is now evaluated directly at the permitted minimum of five seeds before solving
 for larger sample sizes; nonfinite solver results receive the conservative exploratory fallback.
+
+## Completed pilots and exploratory allocation recovery
+
+All 30 full-size pilot runs completed. The allocator then stopped before any main training or final
+test evaluation because six paired seeds could not fit the optimization budget. The approved exploratory
+alternative was not implemented in that branch. The [pilot report](study/pilot.md) preserves every trial,
+the failure record, selected learning rates, timing estimates and power shortfall. A published amendment
+specifies five paired seeds and one common epoch without extending the original deadline. Evaluation
+now reuses unchanged QR frames within each call; training still differentiates through fresh QR frames.
+The new failure and inference-parity tests were written first, failed as expected, and the complete
+23-test suite passed after the fixes. This recovery does not establish a result on the reserved test set.
