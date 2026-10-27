@@ -11,7 +11,7 @@ import numpy as np
 
 from .config import CONDITIONS
 from .io import read_json, write_json, load_checkpoint, digest, source_revision
-from .logging_utils import log_event
+from .logging_utils import log_event, redact_text
 from .statistics import required_seeds
 from .training import train_one
 
@@ -115,13 +115,14 @@ def run_study(config, logger):
                 write_json(status_path, status)
         status.update(status="evaluating")
         write_json(status_path, status)
-        evaluate(config, logger, deadline=min(deadline, time.time() + 2 * 3600))
+        evaluate(replace(config, microbatch=schedule["microbatch"]), logger,
+                 deadline=min(deadline, time.time() + 2 * 3600))
         status.update(status="complete", completed_unix=time.time())
         write_json(status_path, status)
         build_report(config, logger)
         return status
     except Exception as error:
-        status.update(status="incomplete", error=str(error), updated_unix=time.time())
+        status.update(status="incomplete", error=redact_text(str(error)), updated_unix=time.time())
         write_json(status_path, status)
         log_event(logger, "study_incomplete", status)
         build_report(config, logger)  # Missing measurements remain missing, never synthetic.

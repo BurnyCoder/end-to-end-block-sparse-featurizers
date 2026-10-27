@@ -29,6 +29,10 @@ def stage_bundle(config, checkpoint):
                 "epoch", "updates", "status")}
     metadata.update(pooling="absolute_max", weights_sha256=digest(stage / "model.safetensors"))
     write_json(stage / "config.json", metadata)
+    for filename in ("manifest.json", "duplicate_audit.json", "teacher.json", "study_schedule.json"):
+        source = Path(config.root) / filename  # Public image identities and fitted-selection metadata.
+        if source.exists():
+            shutil.copy2(source, stage / filename)  # Reproduction needs assignments, not just their digest.
     metrics = read_json(checkpoint.parent / "test_summary.json")
     write_json(stage / "metrics.json", metrics)
     for filename in ("test_predictions.npz", "history.jsonl", "diagnostics.json", "run.json"):
@@ -56,7 +60,9 @@ def stage_bundle(config, checkpoint):
             "## Limits and provenance\n\nLower KL only measures preservation of this ten-class readout. "
             "It does not establish semantic concepts, full DINO fidelity, or inference acceleration. "
             "`config.json` binds revisions, architecture, objective, seed, preprocessing and training identities. "
-            "`model.safetensors` is for inference; the local training checkpoint additionally retains optimizer/RNG state.\n\n"
+            "`manifest.json` and `duplicate_audit.json` preserve image assignments and exclusion evidence. "
+            "`teacher.json` records classifier selection. `model.safetensors` is for inference; the local training "
+            "checkpoint additionally retains optimizer/RNG state.\n\n"
             "Sources: [BSF paper](https://arxiv.org/abs/2606.25234), "
             "[end-to-end SAE paper](https://arxiv.org/abs/2405.12241), "
             "[Goodfire code](https://github.com/goodfire-ai/block-sparse-featurizer), "

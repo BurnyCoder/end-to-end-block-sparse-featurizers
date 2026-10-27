@@ -142,7 +142,7 @@ def evaluate_checkpoint(config, checkpoint, logger, split="test", deadline=None)
     return summary
 
 
-def evaluate_controls(config, logger, split="test"):
+def evaluate_controls(config, logger, split="test", deadline=None):
     """Local: identity, mean and fresh random bottlenecks; global: quantify trivial ceilings/floors."""
     root = Path(config.root)
     destination = root / f"controls_{split}.json"
@@ -157,7 +157,7 @@ def evaluate_controls(config, logger, split="test"):
         torch.manual_seed(100)  # Match the first confirmatory initialization without fitting.
         model = GrassmannianBSF(768, config.groups, config.block_size, config.active).to(config.device) if name == "untrained" else None
         summary, arrays = measure(model, normalization, probe, features, rows, indices, config.device,
-                                  config.microbatch, replacement=None if name == "untrained" else name)
+                                  config.microbatch, replacement=None if name == "untrained" else name, deadline=deadline)
         results[name] = summary
         np.savez_compressed(root / f"control_{name}_{split}.npz", indices=indices, **arrays)
         log_event(logger, "control", {"name": name, **summary})

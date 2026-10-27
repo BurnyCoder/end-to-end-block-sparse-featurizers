@@ -24,6 +24,9 @@ effect for pilot power analysis; it is not a guaranteed outcome or a reason to c
   transitive duplicate groups before splitting; training images sharing a test group are excluded.
   This detects common near duplicates, not all possible semantic overlap. Existing backbone
   pretraining contamination cannot be ruled out; the holdout is for this featurizer study.
+- Before the full pilot/confirmation, exclude all reserved-test duplicate groups previewed in the
+  separate engineering smoke run. This pre-confirmation clarification keeps the final evaluation
+  unseen after smoke diagnostics. The exclusion uses only image identities, never prediction quality.
 - Pool as `abs(patches).amax(patch_axis)` and fit multinomial logistic regression with
   C in {0.01,0.1,1,10}, selected by development CE. Freeze the selected training-only fit.
   The clean teacher must exceed 20% development accuracy, twice the uniform-class chance level.

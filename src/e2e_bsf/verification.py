@@ -37,7 +37,7 @@ def verify_real_pipeline(config, logger):
         modified, _, _ = reconstruct(model, normalization, patches)
         loss = forward_kl(probe(modified), teacher).mean()
         loss.backward()
-        results.append(float(loss))
+        results.append(float(loss.detach()))
         gradients.append(model.B_raw.grad.detach().clone())
     torch.testing.assert_close(gradients[0], gradients[1], atol=1e-4, rtol=1e-3)
     identity = float(forward_kl(probe(cached), probe(cached)).mean())
@@ -53,7 +53,7 @@ def verify_real_pipeline(config, logger):
         loss = forward_kl(probe(modified), target).mean()
         loss.backward()
         optimizer.step()
-        overfit.append(float(loss))
+        overfit.append(float(loss.detach()))
     if min(overfit[-10:]) >= overfit[0]:
         raise RuntimeError("Real fixed-batch optimization failed to lower KL")
     result = {"images": indices, "online_kl": results[0], "cached_kl": results[1],

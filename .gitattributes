@@ -1,0 +1,7 @@
+# Global: preserve generated binary offsets; local: disable Windows newline conversion.
+*.pdf binary
+*.png binary
+*.safetensors binary
+*.npz binary
+# Vendored Plotly retains upstream whitespace and license text byte-for-byte.
+site/plotly.min.js -diff -text
