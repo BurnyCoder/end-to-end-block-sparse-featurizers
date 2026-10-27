@@ -1,0 +1,63 @@
+{
+  "status": "complete",
+  "started_unix": 1793062930.9148455,
+  "max_hours": 24.0,
+  "updated_unix": 1793104975.8722432,
+  "previous_failures": [
+    {
+      "error": "At least one common epoch across the required conditions/seeds cannot fit",
+      "at_unix": 1793068349.0166247
+    }
+  ],
+  "schedule": {
+    "seeds": [
+      100,
+      101,
+      102,
+      103,
+      104
+    ],
+    "epochs": 1,
+    "learning_rates": {
+      "block_mse": 0.0003,
+      "block_kl": 0.0003,
+      "block_kl_mse": 0.0003,
+      "scalar_mse": 0.0001,
+      "scalar_kl": 0.0003
+    },
+    "microbatch": 8,
+    "conditions": [
+      "block_mse",
+      "block_kl",
+      "block_kl_mse",
+      "scalar_mse",
+      "scalar_kl"
+    ],
+    "power": {
+      "required": 6,
+      "effect_size": 1.6263222207885482,
+      "power_at_five": 0.774706538819405,
+      "minimum_absolute_effect": 0.03601372142632802,
+      "pilot_pairs": 3,
+      "reason": "numerical paired-t solution"
+    },
+    "exploratory": true,
+    "requested_seed_count": 6,
+    "allocation_reason": "replication_reduced_to_fit_original_budget",
+    "available_optimization_seconds": 70764.62719321251,
+    "predicted_optimization_seconds": 66724.91262335527,
+    "forecast_seconds_per_epoch": {
+      "block_mse": 1428.183728618555,
+      "block_kl": 1417.4843815789982,
+      "block_kl_mse": 1437.9174868417863,
+      "scalar_mse": 4466.580251645056,
+      "scalar_kl": 4594.816675986657
+    },
+    "manifest_sha256": "4e9dd03404530669b54f9d78a90af3d118050c83b8d5e5433ec87184c1897d78",
+    "source_revision": "c2adebc158be34482fedeb2efd337ca84171ac89",
+    "frozen_at_unix": 1793071366.4244995,
+    "optimization_deadline_unix": 1793142130.9148455
+  },
+  "last_completed_run": "scalar_kl_seed104",
+  "completed_unix": 1793105674.9639435
+}
