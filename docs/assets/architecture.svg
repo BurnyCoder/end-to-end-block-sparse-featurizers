@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="300" viewBox="0 0 1100 300">
+<rect width="1100" height="300" rx="14" fill="#101c2d"/>
+<style>text{font-family:Arial,sans-serif;fill:#eef4ff;font-size:18px}.small{font-size:14px;fill:#b8cce4}rect.box{fill:#1d344e;stroke:#6a94b8}path{fill:none;stroke:#66d7be;stroke-width:3}</style>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6"/></marker></defs>
+<text x="30" y="35">End-to-end block-sparse featurizers</text>
+<text class="small" x="30" y="60">Only the BSF trains. The original model is DINOv3 plus a frozen patch classifier.</text>
+<rect class="box" x="30" y="105" width="170" height="65" rx="8"/><text x="53" y="133">Image → DINOv3</text><text class="small" x="54" y="155">196 × 768 patches</text>
+<rect class="box" x="290" y="90" width="210" height="60" rx="8"/><text x="315" y="125">Original patches</text>
+<rect class="box" x="290" y="195" width="210" height="65" rx="8"/><text x="313" y="222">Normalize → BSF</text><text class="small" x="313" y="245">Reconstruct → restore units</text>
+<rect class="box" x="595" y="90" width="230" height="60" rx="8"/><text x="618" y="125">Frozen pooling + head</text>
+<rect class="box" x="595" y="195" width="230" height="65" rx="8"/><text x="618" y="232">Same frozen head</text>
+<rect class="box" x="910" y="142" width="160" height="65" rx="8"/><text x="931" y="170">KL(original ||</text><text x="931" y="193">reconstructed)</text>
+<path d="M200 137 L245 137 L245 120 L290 120" marker-end="url(#a)"/><path d="M245 137 L245 227 L290 227" marker-end="url(#a)"/>
+<path d="M500 120 L595 120" marker-end="url(#a)"/><path d="M500 227 L595 227" marker-end="url(#a)"/>
+<path d="M825 120 L865 120 L865 165 L910 165" marker-end="url(#a)"/><path d="M825 227 L865 227 L865 190 L910 190" marker-end="url(#a)"/>
+</svg>
