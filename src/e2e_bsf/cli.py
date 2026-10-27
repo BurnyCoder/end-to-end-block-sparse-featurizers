@@ -7,6 +7,7 @@ https://docs.pytorch.org/docs/stable/notes/randomness.html.
 import argparse  # Standard-library CLI avoids another configuration framework.
 from dataclasses import replace  # CLI overrides remain explicit in saved configs.
 import os  # Set cuBLAS determinism before importing CUDA-using modules.
+import sys  # Dispatch the independent sweep command family without changing legacy arguments.
 from pathlib import Path
 
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")  # Required for deterministic CUDA GEMMs.
@@ -16,6 +17,9 @@ def main():
     """Local: dispatch explicit phases; global: offer one reproducible user workflow."""
     from dotenv import load_dotenv
     load_dotenv(Path.cwd() / ".env", override=False)  # Never search parent/other project env files.
+    if len(sys.argv) > 1 and sys.argv[1] == "sweep":
+        from .sweep.cli import main as sweep_main
+        return sweep_main(sys.argv[2:])
     import torch
     from .config import Config, CONDITIONS
     from .logging_utils import create_run_logger, log_event

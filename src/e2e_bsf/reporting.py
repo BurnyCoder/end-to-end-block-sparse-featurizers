@@ -112,10 +112,11 @@ def plot_evidence(summaries, histories, destination):
         plt.close(fig)
 
 
-def plot_maps(diagnostics, destination):
+def plot_maps(diagnostics, destination, labels=None):
     """Local: fixed examples and normalized maps; global: show methods without semantic matching."""
     if not diagnostics:
         return
+    labels = LABELS if labels is None else labels  # Reuse the renderer for independently registered sweep cells.
     fig, axes = plt.subplots(3, len(diagnostics), figsize=(3 * len(diagnostics), 7), squeeze=False, layout="constrained")
     for column, result in enumerate(diagnostics):
         for row, example in enumerate(result["examples"][:3]):
@@ -124,7 +125,7 @@ def plot_maps(diagnostics, destination):
             heat = maps[selected]
             heat = heat / max(1e-12, np.linalg.norm(heat))
             axes[row, column].imshow(heat, vmin=0, vmax=1, cmap="viridis")
-            axes[row, column].set_title(f"{LABELS[result['condition']]}\nclass {example['label']}, block {example['block_ids'][selected]}", fontsize=8)
+            axes[row, column].set_title(f"{labels[result['condition']]}\nclass {example['label']}, block {example['block_ids'][selected]}", fontsize=8)
             axes[row, column].set_xticks([])
             axes[row, column].set_yticks([])
     fig.suptitle("Fixed development examples | strongest selected block per image | unit spatial L2 norm")

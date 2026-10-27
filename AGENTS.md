@@ -1,6 +1,8 @@
 # Working instructions
 
 This repository implements the human-specified plan in [docs/preregistration.md](docs/preregistration.md).
+The separate block-6 follow-up is specified in [docs/downstream-preregistration.md](docs/downstream-preregistration.md).
+It uses one seed, all-token replacement and disclosed test reuse; never apply its assumptions retroactively to the original study.
 Keep changes small, modular, sourced, and tested before expensive runs. Use `uv`, Python 3.12,
 the checkout's `.venv`, and ignored `.env` configuration. Work only in this checkout; use public
 source links for the earlier workbench. Do not reuse pretrained rabbit BSFs in scratch conditions.
