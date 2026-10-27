@@ -1,0 +1,16 @@
+[
+  {
+    "scientific_choices_changed": false,
+    "event": "verification_batch_geometry_repair",
+    "main_optimizer_updates_before_repair": 0,
+    "original_error": "Tensor-likes are not close!\n\nMismatched elements: 1 / 308736 (0.0%)\nGreatest absolute difference: 0.0001277923583984375 at index (0, 1, 367) (up to 0.0001 allowed)\nGreatest relative difference: 0.0009009735658764839 at index (0, 1, 367) (up to 0.0001 allowed)",
+    "original_preparation_deadline_unix": 1793131202.5009177,
+    "failure_unix": 1793128087.8127675,
+    "original_started_unix": 1793124002.5009177,
+    "change": "Use extraction microbatch for real-image verification; tolerances unchanged.",
+    "original_deadline_unix": 1793210402.5009177,
+    "recorded_utc": "2026-10-27T19:35:43.3083491Z",
+    "evidence": "batch_numerics_diagnosis.json",
+    "diagnosis": "Different float32 kernel batch shapes: original verification used two images, extraction used eight. Matching eight-image training batches produced exact raw-state and logit agreement."
+  }
+]

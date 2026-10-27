@@ -10,9 +10,10 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from ..io import read_json, write_json
-from ..logging_utils import log_event
+from ..io import read_json, write_json, source_revision
+from ..logging_utils import log_event, redact_text
 from .analysis import bootstrap_columns, paired_curves, threshold_budgets, normalized_auc, pareto_indices
+from . import progress as execution
 
 
 def table(rows):
@@ -27,6 +28,7 @@ def table(rows):
 def figures(evidence, destination):
     """Display all curves on honest common axes; image intervals are explicitly conditional."""
     destination.mkdir(parents=True, exist_ok=True)
+    execution.figures(evidence, destination)
     rows = evidence["runs"]
     if not rows:
         return
@@ -118,7 +120,8 @@ def report(spec, logger):
                     primary = effect
                 else:
                     secondary[label] = effect
-    narrative = "The full grid is not yet evaluated; no complete-curve inference is available."
+    status, progress = read_json(root / "study_status.json"), execution.inventory(spec)
+    narrative = execution.narrative(progress, status)
     if primary:
         lo, hi = primary["ci95"]
         narrative = (f"Local-minus-output-KL normalized curve area: {primary['mean_improvement']:.6g} nats/image; "
@@ -130,13 +133,17 @@ def report(spec, logger):
     pareto = {metric: [rows[i]["cell"] for i in pareto_indices([[row[metric], row["kl"]] for row in rows])]
               for metric in ("active_coordinates", "insertion_nmse", "downstream_mse")} if rows else {}
     evidence = {"label": "Exploratory block-6 full-grid sweep; one seed; previously analyzed Imagenette test set",
-                "spec": spec.to_dict(), "status": read_json(root / "study_status.json"),
+                "spec": spec.to_dict(), "status": status, "progress": progress, "report_source_revision": source_revision(),
+                "pilot_observations": execution.observations(progress),
+                "verification": read_json(root / "verification.json") if (root / "verification.json").exists() else None,
+                "audit": read_json(root / "audit.json") if (root / "audit.json").exists() else None,
                 "schedule": read_json(root / "study_schedule.json") if (root / "study_schedule.json").exists() else None,
                 "runs": rows, "primary": primary, "secondary": secondary, "thresholds": thresholds, "pareto": pareto,
                 "narrative": narrative, "coordinates": coordinates, "histories": histories, "diagnostics": diagnostics,
                 "split_counts": read_json(root / "manifest.json")["counts"],
                 "controls": [read_json(path) for path in sorted((root / "controls").glob("*.json"))]}
     write_json(destination / "results.json", evidence)
+    execution.write_pilot_reports(progress, destination)
     figures(evidence, destination / "figures")
     body = ("# Downstream reconstruction and sparsity sweep\n\n" + evidence["label"] + "\n\n" + narrative + "\n\n" + table(rows) +
             "\n\n## Method and interpretation\n\nThe [preregistration](../../docs/downstream-preregistration.md) defines the full grid, "
@@ -157,10 +164,30 @@ def report(spec, logger):
             "Fixed maps and interventions at k=16 are exploratory; inactive blocks and approximate random matching are retained. "
             "All measured arrays, settings and histories are available in results.json and the individual model bundles.\n")
     (destination / "summary.md").write_text(body, encoding="utf-8")
+    if not rows:
+        # The failed-allocation presentation must not imply that nonexistent test figures or bundles exist.
+        body = ("# Downstream sweep: execution status\n\n" + narrative + "\n\n"
+                "The [registered design](../../docs/downstream-preregistration.md) remains unchanged. "
+                "See [execution notes](../../docs/downstream-execution-notes.md), [all 50 pilot statuses](pilots.md), "
+                "[measured evidence](results.json), and [the paper](paper.pdf).\n\n"
+                "## What is measured\n\nDevelopment-only pilot endpoints and training histories are available below. "
+                + evidence["pilot_observations"] + "\n\nThese are tuning data from an incomplete grid, not estimates of the primary hypothesis. "
+                "No main seed-200 checkpoint, selected LR schedule, test curve, bootstrap interval, sparsity saving, "
+                "k=16 map/intervention or completed study model bundle exists. The thresholds are unmeasured, not unattained.\n\n" +
+                execution.pilot_table(progress["pilot_trials"]) + "\n\n## Implementation verification\n\n```json\n" +
+                json.dumps(evidence["verification"], indent=2) + "\n```\n\n## Recorded figures\n\n" +
+                "\n\n".join(f"![{path.stem}](figures/{path.name})" for path in sorted((destination / "figures").glob("*.png"))) + "\n")
+        (destination / "summary.md").write_text(body, encoding="utf-8")
     for filename in ("study_status.json", "study_schedule.json", "pilot.json", "verification.json", "cache.json", "publication.json",
-                     "deviations.json", "batch_numerics_diagnosis.json"):
+                     "deviations.json", "batch_numerics_diagnosis.json", "audit.json"):
         if (root / filename).exists():
             shutil.copy2(root / filename, destination / filename)
+    logs = destination / "logs"
+    logs.mkdir(exist_ok=True)
+    for path in (root / "logs").glob("*-sweep-*.log"):
+        if not path.name.endswith("-sweep-report.log"):
+            # Preserve complete finished command logs, reusing credential sanitization before publication.
+            (logs / path.with_suffix(".txt").name).write_text(redact_text(path.read_text(encoding="utf-8")), encoding="utf-8")
     from .paper import write_paper
     write_paper(destination, evidence)
     site = Path("site/sweep")

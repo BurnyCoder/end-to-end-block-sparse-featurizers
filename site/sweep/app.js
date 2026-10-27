@@ -2,9 +2,50 @@
  * Sources: https://plotly.com/javascript/line-charts/ and MDN DOM documentation. */
 const $ = id => document.getElementById(id);
 const layout = title => ({title, margin: {t: 45, r: 25, b: 65, l: 75}, paper_bgcolor: '#fff', plot_bgcolor: '#fff'});
-const draw = (id, traces, options = {}) => Plotly.react(id, traces, {...layout(''), ...options}, {responsive: true, displaylogo: false});
+const draw = (id, traces, options = {}) => {
+  const settings = {...layout(''), ...options};
+  // Plotly 3 requires title objects: https://plotly.com/javascript/figure-labels/.
+  for (const item of [settings, settings.xaxis, settings.yaxis]) {
+    if (item && typeof item.title === 'string') item.title = {text: item.title};
+  }
+  return Plotly.react(id, traces, settings, {responsive: true, displaylogo: false});
+};
 const option = (select, label, value) => select.add(new Option(label, value));
 let evidence;
+
+function pilotCurve() {
+  const row = evidence.progress.pilot_trials.find(item => item.name === $('pilot').value);
+  draw('pilot-curve', row ? [{type: 'scatter', mode: 'lines+markers', name: row.name,
+    x: row.history.map(item => item.images_seen), y: row.history.map(item => item.kl)}] : [],
+    {title: 'Recorded pilot training only', xaxis: {title: 'Images seen'}, yaxis: {title: 'Batch KL', rangemode: 'tozero'}});
+}
+
+function pilotEvidence() {
+  const progress = evidence.progress;
+  if (!progress) return;
+  $('pilot-evidence').hidden = false;
+  $('pilot-status').textContent = `${progress.pilot_completed}/${progress.pilot_planned} completed pilots; ${progress.pilot_started} started. ` +
+    `${progress.main_started}/25 main runs started. ${evidence.pilot_observations} Missing endpoints are unmeasured.`;
+  for (const row of progress.pilot_trials) {
+    const tr = document.createElement('tr');
+    [row.cell, row.lr, row.state.status, row.development ? row.development.kl.toPrecision(5) : 'unmeasured',
+      row.development ? `${(100 * row.development.accuracy).toFixed(2)}%` : 'unmeasured'].forEach(value => {
+      const td = document.createElement('td'); td.textContent = value; tr.append(td);
+    });
+    $('pilot-rows').append(tr);
+    if (row.history.length) option($('pilot'), `${row.cell}, LR ${row.lr}`, row.name);
+  }
+  $('pilot').addEventListener('change', pilotCurve);
+  pilotCurve();
+  const verification = evidence.verification;
+  if (verification) {
+    $('verification-status').textContent = `Cached/online state difference: ${verification.maximum_state_difference}; ` +
+      `largest gradient difference: ${Math.max(...Object.values(verification.maximum_gradient_difference))}. ` +
+      'This check fits eight training images and is not a generalization result.';
+    draw('verification', [{type: 'scatter', mode: 'lines', x: verification.fixed_batch_kl.map((_, i) => i), y: verification.fixed_batch_kl}],
+      {xaxis: {title: 'Optimizer update'}, yaxis: {title: 'Fixed training-batch KL', rangemode: 'tozero'}});
+  }
+}
 
 function curves() {
   const metric = $('metric').value;
@@ -49,8 +90,12 @@ async function initialize() {
   if (!response.ok) return;
   evidence = await response.json();
   $('status').textContent = `${evidence.label}. ${evidence.narrative}`;
-  if (!evidence.runs.length) return;
   $('paper').href = 'paper.pdf'; $('paper').textContent = 'Sweep paper ↗';
+  pilotEvidence();
+  if (!evidence.runs.length) {
+    document.querySelectorAll('.main-results').forEach(section => { section.hidden = true; });
+    return;
+  }
   for (const row of evidence.runs) {
     const tr = document.createElement('tr');
     [row.label, row.k, row.kl.toPrecision(5), `${(100 * row.accuracy).toFixed(2)}%`,

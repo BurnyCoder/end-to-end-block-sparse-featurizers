@@ -1,0 +1,93 @@
+2026-10-27T17:59:58Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_command payload={"phase":"run","spec":{"root":"outputs/sweeps/downstream-v1","source_root":"outputs/study","cache_dir":"D:/AI/end-to-end-block-sparse-featurizers/downstream-v1","report_dir":"reports/downstream-sweep","device":"cuda","insertion_block":6,"groups":4096,"block_size":3,"active_blocks":[4,8,16,32,64],"downstream_weights":[0.0001,0.001,0.01],"learning_rates":[0.0001,0.0003],"seed":200,"pilot_seed":900,"microbatch":8,"effective_batch":32,"max_epochs":20,"max_hours":24.0,"preparation_hours":2.0,"evaluation_hours":2.0,"pilot_train_images":510,"pilot_dev_images":250,"bootstrap_replicates":2000},"log":"outputs\\sweeps\\downstream-v1\\logs\\20261027T175956.146504Z-sweep-run.log"}
+2026-10-27T18:00:02Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_upload_access payload={"account":"BurnyCoder",[REDACTED],"note":"Fine-grained repository permission is confirmed by the upload stage"}
+2026-10-27T18:00:49Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":200,"images":13344,"seconds":21.60899999999674}
+2026-10-27T18:01:10Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":400,"images":13344,"seconds":42.639999999984866}
+2026-10-27T18:01:31Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":600,"images":13344,"seconds":63.639999999984866}
+2026-10-27T18:01:54Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":800,"images":13344,"seconds":86.17199999999139}
+2026-10-27T18:02:14Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":1000,"images":13344,"seconds":106.625}
+2026-10-27T18:02:35Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":1200,"images":13344,"seconds":127.71799999999348}
+2026-10-27T18:02:59Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":1400,"images":13344,"seconds":151.35899999999674}
+2026-10-27T18:03:20Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":1600,"images":13344,"seconds":172.625}
+2026-10-27T18:03:42Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":1800,"images":13344,"seconds":194.375}
+2026-10-27T18:04:05Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":2000,"images":13344,"seconds":217.43700000000536}
+2026-10-27T18:04:32Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":2200,"images":13344,"seconds":244.38999999998487}
+2026-10-27T18:04:55Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":2400,"images":13344,"seconds":267.85899999999674}
+2026-10-27T18:05:19Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":2600,"images":13344,"seconds":291.875}
+2026-10-27T18:05:49Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":2800,"images":13344,"seconds":321.875}
+2026-10-27T18:06:14Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":3000,"images":13344,"seconds":346.7969999999914}
+2026-10-27T18:06:37Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":3200,"images":13344,"seconds":369.31200000000536}
+2026-10-27T18:07:02Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":3400,"images":13344,"seconds":394.2179999999935}
+2026-10-27T18:07:26Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":3600,"images":13344,"seconds":418.73399999999674}
+2026-10-27T18:07:52Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":3800,"images":13344,"seconds":444.8429999999935}
+2026-10-27T18:08:15Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":4000,"images":13344,"seconds":468.01499999998487}
+2026-10-27T18:08:40Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":4200,"images":13344,"seconds":493.06200000000536}
+2026-10-27T18:09:04Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":4400,"images":13344,"seconds":516.4529999999795}
+2026-10-27T18:09:28Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":4600,"images":13344,"seconds":540.875}
+2026-10-27T18:09:52Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":4800,"images":13344,"seconds":564.3589999999967}
+2026-10-27T18:10:16Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":5000,"images":13344,"seconds":588.4839999999967}
+2026-10-27T18:10:43Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":5200,"images":13344,"seconds":615.5149999999849}
+2026-10-27T18:11:06Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":5400,"images":13344,"seconds":638.625}
+2026-10-27T18:11:29Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":5600,"images":13344,"seconds":661.25}
+2026-10-27T18:11:51Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":5800,"images":13344,"seconds":683.5469999999914}
+2026-10-27T18:12:13Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":6000,"images":13344,"seconds":705.6399999999849}
+2026-10-27T18:12:37Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":6200,"images":13344,"seconds":730.0}
+2026-10-27T18:13:01Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":6400,"images":13344,"seconds":753.8279999999795}
+2026-10-27T18:13:26Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":6600,"images":13344,"seconds":778.7339999999967}
+2026-10-27T18:13:51Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":6800,"images":13344,"seconds":803.5779999999795}
+2026-10-27T18:14:16Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":7000,"images":13344,"seconds":828.4839999999967}
+2026-10-27T18:14:42Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":7200,"images":13344,"seconds":854.625}
+2026-10-27T18:15:07Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":7400,"images":13344,"seconds":879.2809999999881}
+2026-10-27T18:15:32Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":7600,"images":13344,"seconds":904.9059999999881}
+2026-10-27T18:15:56Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":7800,"images":13344,"seconds":928.5929999999935}
+2026-10-27T18:16:20Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":8000,"images":13344,"seconds":953.0309999999881}
+2026-10-27T18:16:45Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":8200,"images":13344,"seconds":977.5}
+2026-10-27T18:17:08Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":8400,"images":13344,"seconds":1000.4219999999914}
+2026-10-27T18:17:28Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":8600,"images":13344,"seconds":1020.5929999999935}
+2026-10-27T18:17:50Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":8800,"images":13344,"seconds":1042.2809999999881}
+2026-10-27T18:18:14Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":9000,"images":13344,"seconds":1066.2969999999914}
+2026-10-27T18:18:36Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":9200,"images":13344,"seconds":1088.7339999999967}
+2026-10-27T18:18:59Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":9400,"images":13344,"seconds":1111.9529999999795}
+2026-10-27T18:19:26Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":9600,"images":13344,"seconds":1138.2809999999881}
+2026-10-27T18:19:50Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":9800,"images":13344,"seconds":1162.2179999999935}
+2026-10-27T18:20:15Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":10000,"images":13344,"seconds":1187.1559999999881}
+2026-10-27T18:20:36Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":10200,"images":13344,"seconds":1208.9370000000054}
+2026-10-27T18:21:00Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":10400,"images":13344,"seconds":1233.0620000000054}
+2026-10-27T18:21:23Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":10600,"images":13344,"seconds":1255.8589999999967}
+2026-10-27T18:21:46Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":10800,"images":13344,"seconds":1278.5309999999881}
+2026-10-27T18:22:10Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":11000,"images":13344,"seconds":1302.5929999999935}
+2026-10-27T18:22:37Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":11200,"images":13344,"seconds":1329.7809999999881}
+2026-10-27T18:23:04Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":11400,"images":13344,"seconds":1356.7179999999935}
+2026-10-27T18:23:31Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":11600,"images":13344,"seconds":1383.2649999999849}
+2026-10-27T18:23:54Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":11800,"images":13344,"seconds":1406.6870000000054}
+2026-10-27T18:24:17Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":12000,"images":13344,"seconds":1429.9679999999935}
+2026-10-27T18:24:41Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":12200,"images":13344,"seconds":1453.3429999999935}
+2026-10-27T18:25:04Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":12400,"images":13344,"seconds":1477.0620000000054}
+2026-10-27T18:25:28Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":12600,"images":13344,"seconds":1500.7179999999935}
+2026-10-27T18:25:52Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":12800,"images":13344,"seconds":1524.2649999999849}
+2026-10-27T18:26:17Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":13000,"images":13344,"seconds":1549.2339999999967}
+2026-10-27T18:26:38Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":13200,"images":13344,"seconds":1570.9370000000054}
+2026-10-27T18:26:55Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_cache payload={"completed":13344,"images":13344,"seconds":1587.9219999999914}
+2026-10-27T18:29:41Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_train_variance payload={"block":6,"all_patch_special":[1.8012124475152693,1.4226413158728834,16.64120080789685]}
+2026-10-27T18:33:41Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_train_variance payload={"block":7,"all_patch_special":[3.4408927884175142,3.0929767889315194,17.079199968268444]}
+2026-10-27T18:36:39Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_train_variance payload={"block":8,"all_patch_special":[7.8127324057634215,7.537579136547066,18.59874055904449]}
+2026-10-27T18:40:31Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_train_variance payload={"block":9,"all_patch_special":[19.828777538445365,19.788754655296348,21.397674557887285]}
+2026-10-27T18:43:35Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_train_variance payload={"block":10,"all_patch_special":[48.594702031136116,49.01771617572838,32.01254756312085]}
+2026-10-27T18:46:59Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_train_variance payload={"block":11,"all_patch_special":[152.67127790368016,154.68676026354663,73.66436939691988]}
+2026-10-27T18:50:18Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_train_variance payload={"block":12,"all_patch_special":[672.336316461971,680.1007561202093,367.9702818590523]}
+2026-10-27T19:08:01Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_prepared payload={"images":13344,"cache_bytes":57676824576,"fit_images":7575}
+2026-10-27T19:08:07Z INFO bsf_experiments.sweep-run.20261027T175956.146504Z event=sweep_incomplete payload={"status":"incomplete","spec":{"root":"outputs/sweeps/downstream-v1","source_root":"outputs/study","cache_dir":"D:/AI/end-to-end-block-sparse-featurizers/downstream-v1","report_dir":"reports/downstream-sweep","device":"cuda","insertion_block":6,"groups":4096,"block_size":3,"active_blocks":[4,8,16,32,64],"downstream_weights":[0.0001,0.001,0.01],"learning_rates":[0.0001,0.0003],"seed":200,"pilot_seed":900,"microbatch":8,"effective_batch":32,"max_epochs":20,"max_hours":24.0,"preparation_hours":2.0,"evaluation_hours":2.0,"pilot_train_images":510,"pilot_dev_images":250,"bootstrap_replicates":2000},"started_unix":1793124002.5009177,"preparation_deadline_unix":1793131202.5009177,"optimization_deadline_unix":1793203202.5009177,"deadline_unix":1793210402.5009177,"source_revision":"c5a99ef1439374c94ad249db7a73554a8d7f2b4e","error":"Tensor-likes are not close!\n\nMismatched elements: 1 / 308736 (0.0%)\nGreatest absolute difference: 0.0001277923583984375 at index (0, 1, 367) (up to 0.0001 allowed)\nGreatest relative difference: 0.0009009735658764839 at index (0, 1, 367) (up to 0.0001 allowed)","updated_unix":1793128087.8127675}
+2026-10-27T19:08:07Z ERROR bsf_experiments.sweep-run.20261027T175956.146504Z Sweep stopped; preserve original deadlines and inspect this complete log
+Traceback (most recent call last):
+  File "C:\Users\Happy\Documents\projects\end-to-end-block-sparse-featurizers\src\e2e_bsf\sweep\cli.py", line 69, in main
+    run(spec, logger, args.phase, args.cell)
+  File "C:\Users\Happy\Documents\projects\end-to-end-block-sparse-featurizers\src\e2e_bsf\sweep\pipeline.py", line 94, in run
+    verify(spec, ctx, logger, status["preparation_deadline_unix"])
+  File "C:\Users\Happy\Documents\projects\end-to-end-block-sparse-featurizers\src\e2e_bsf\sweep\verification.py", line 33, in verify
+    torch.testing.assert_close(a, b, atol=1e-4, rtol=1e-4)
+  File "C:\Users\Happy\Documents\projects\end-to-end-block-sparse-featurizers\.venv\Lib\site-packages\torch\testing\_comparison.py", line 1689, in assert_close
+    raise error_metas[0].to_error(msg)
+AssertionError: Tensor-likes are not close!
+
+Mismatched elements: 1 / 308736 (0.0%)
+Greatest absolute difference: 0.0001277923583984375 at index (0, 1, 367) (up to 0.0001 allowed)
+Greatest relative difference: 0.0009009735658764839 at index (0, 1, 367) (up to 0.0001 allowed)

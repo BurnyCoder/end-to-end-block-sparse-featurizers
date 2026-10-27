@@ -1,0 +1,137 @@
+[
+  {
+    "cell": "k004_mse",
+    "lr": 0.0001,
+    "dev_kl": 3.606602430343628,
+    "train_seconds_per_image": 0.39981764705877926,
+    "dev_seconds_per_image": 0.2737480000000214,
+    "checkpoint_seconds": 0.1879999999946449,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_mse",
+    "lr": 0.0003,
+    "dev_kl": 3.4220361709594727,
+    "train_seconds_per_image": 0.16951568627446964,
+    "dev_seconds_per_image": 0.013935999999986962,
+    "checkpoint_seconds": 0.39100000000325963,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_kl",
+    "lr": 0.0001,
+    "dev_kl": 3.3337953090667725,
+    "train_seconds_per_image": 0.15088823529413453,
+    "dev_seconds_per_image": 0.01024800000002142,
+    "checkpoint_seconds": 0.1879999999946449,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_kl",
+    "lr": 0.0003,
+    "dev_kl": 2.589423418045044,
+    "train_seconds_per_image": 0.12478627450981031,
+    "dev_seconds_per_image": 0.0115,
+    "checkpoint_seconds": 0.14000000001396984,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_downstream_b0.0001",
+    "lr": 0.0001,
+    "dev_kl": 3.3340749740600586,
+    "train_seconds_per_image": 0.12499803921570728,
+    "dev_seconds_per_image": 0.0105,
+    "checkpoint_seconds": 0.15700000000651926,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_downstream_b0.0001",
+    "lr": 0.0003,
+    "dev_kl": 2.6021931171417236,
+    "train_seconds_per_image": 0.12696274509801822,
+    "dev_seconds_per_image": 0.011871999999973923,
+    "checkpoint_seconds": 0.14100000000325963,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_downstream_b0.001",
+    "lr": 0.0001,
+    "dev_kl": 3.330404043197632,
+    "train_seconds_per_image": 0.10551372549020657,
+    "dev_seconds_per_image": 0.009623999999952502,
+    "checkpoint_seconds": 0.15700000000651926,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_downstream_b0.001",
+    "lr": 0.0003,
+    "dev_kl": 2.5875449180603027,
+    "train_seconds_per_image": 0.11491960784318793,
+    "dev_seconds_per_image": 0.010188000000081956,
+    "checkpoint_seconds": 0.17199999999138527,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_downstream_b0.01",
+    "lr": 0.0001,
+    "dev_kl": 3.2924516201019287,
+    "train_seconds_per_image": 0.11375490196092584,
+    "dev_seconds_per_image": 0.009935999999986962,
+    "checkpoint_seconds": 0.5,
+    "microbatch": 8
+  },
+  {
+    "cell": "k004_downstream_b0.01",
+    "lr": 0.0003,
+    "dev_kl": 2.443610429763794,
+    "train_seconds_per_image": 0.11587058823526034,
+    "dev_seconds_per_image": 0.010064000000013038,
+    "checkpoint_seconds": 0.7660000000032596,
+    "microbatch": 8
+  },
+  {
+    "cell": "k008_mse",
+    "lr": 0.0001,
+    "dev_kl": 2.917825698852539,
+    "train_seconds_per_image": 0.11145882352943505,
+    "dev_seconds_per_image": 0.0105,
+    "checkpoint_seconds": 0.360000000015134,
+    "microbatch": 8
+  },
+  {
+    "cell": "k008_mse",
+    "lr": 0.0003,
+    "dev_kl": 3.0823862552642822,
+    "train_seconds_per_image": 0.10873333333327216,
+    "dev_seconds_per_image": 0.01018799999996554,
+    "checkpoint_seconds": 0.15700000000651926,
+    "microbatch": 8
+  },
+  {
+    "cell": "k008_kl",
+    "lr": 0.0001,
+    "dev_kl": 2.538968563079834,
+    "train_seconds_per_image": 0.11152156862742998,
+    "dev_seconds_per_image": 0.00993999999994412,
+    "checkpoint_seconds": 0.17100000000209548,
+    "microbatch": 8
+  },
+  {
+    "cell": "k008_kl",
+    "lr": 0.0003,
+    "dev_kl": 2.211515188217163,
+    "train_seconds_per_image": 0.11026274509803283,
+    "dev_seconds_per_image": 0.009935999999986962,
+    "checkpoint_seconds": 0.15599999998812564,
+    "microbatch": 8
+  },
+  {
+    "cell": "k008_downstream_b0.0001",
+    "lr": 0.0001,
+    "dev_kl": 2.5398614406585693,
+    "train_seconds_per_image": 0.11198039215689241,
+    "dev_seconds_per_image": 0.010064000000013038,
+    "checkpoint_seconds": 0.1870000000053551,
+    "microbatch": 8
+  }
+]

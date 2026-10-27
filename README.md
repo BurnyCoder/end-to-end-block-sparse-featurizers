@@ -8,9 +8,26 @@ It combines [Goodfire's BSFs](https://arxiv.org/abs/2606.25234) with
 
 ![Data flow and frozen/trainable components](docs/assets/architecture.svg)
 
-**New follow-up, registered but not yet run:** a [block-6 downstream reconstruction and sparsity sweep](docs/downstream-preregistration.md)
-will replace all 201 tokens and compare 25 operating points with one seed in a separate 24-hour budget.
-It explicitly reuses the previously analyzed Imagenette test set. The completed final-layer results below remain historical.
+**Follow-up allocation failure, 2026-10-27:** the [block-6 downstream reconstruction and sparsity sweep](docs/downstream-preregistration.md)
+stopped at its two-hour preparation deadline. Extraction, training-only normalization and hashing finished;
+real-image verification passed after a documented batch-size repair. Only **15/50 pilots completed**;
+a 16th trained but lacked its development endpoint. **0/25 main runs** and **zero new test evaluations** ran.
+No main learning rates, curve advantage, uncertainty interval or sparsity saving was estimated. This
+is an execution failure, not evidence against KL training. The original final-layer results below remain unchanged.
+
+| Follow-up objective | Planned sparsities k | Main test KL |
+|---|---|---|
+| Local normalized MSE | 4, 8, 16, 32, 64 | Unmeasured |
+| Output KL | 4, 8, 16, 32, 64 | Unmeasured |
+| KL + downstream MSE, beta=0.0001 / 0.001 / 0.01 | 4, 8, 16, 32, 64 each | Unmeasured |
+
+![All recorded development pilot endpoints; blanks are unmeasured](reports/downstream-sweep/figures/pilot_endpoints.png)
+
+[Failure report and all pilot records](reports/downstream-sweep/summary.md) · [Separate paper](reports/downstream-sweep/paper.pdf) ·
+[Interactive pilot explorer](https://burnycoder.github.io/end-to-end-block-sparse-featurizers/sweep/) ·
+[Independent audit](reports/downstream-sweep/audit.json) · [Execution notes](docs/downstream-execution-notes.md).
+The proposed follow-up explicitly reuses the previously analyzed Imagenette test set and has one planned main seed.
+No follow-up Hugging Face collection was created because no completed evaluated main model exists.
 
 **Completed, 2026-10-27:** all 25 runs and 3,875-image test evaluations finished within the original
 24-hour limit. Five paired seeds received one epoch each. The study is exploratory: the pilot-based
@@ -144,6 +161,9 @@ The default raw-state cache needs approximately **58 GB** under `D:/AI/end-to-en
 Set `E2E_SWEEP_CACHE_DIR` in `.env` for another dedicated location. Additional overrides are
 `E2E_SWEEP_ROOT`, `E2E_SWEEP_SOURCE_ROOT`, and `E2E_SWEEP_DEVICE`; paths and configuration are immutable after preparation starts.
 The [sweep explorer](https://burnycoder.github.io/end-to-end-block-sparse-featurizers/sweep/) publishes measured results when available.
+The recorded `downstream-v1` preparation allocation has expired; rerunning it does not restart the clock.
+The 58 GB cache and all 16 pilot checkpoints remain local. A further scientific run requires an explicitly
+registered amendment or a new allocation; this repository does not silently extend the stopped study.
 
 - PyTorch/CUDA, Transformers/DINOv3, torchvision/Imagenette, scikit-learn probe and grouped splits.
 - Five matched training conditions, deterministic resume, partial-batch handling and memory backoff.
