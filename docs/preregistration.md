@@ -55,12 +55,18 @@ Compute paired pilot variance for the primary contrast and a two-sided paired-t 
 at alpha .05, power .8 and 10% of pilot local KL. Use `ceil(required)`, bounded to 5..10 seeds;
 degenerate/insufficient pilot evidence uses 10 and an exploratory label.
 
-Confirmatory seeds are consecutive from 100. Forecast total time using the slowest pilot image
-throughput including validation, multiplied by 1.25 for overhead. Fix the largest common epoch
+Confirmatory seeds are consecutive from 100. Forecast total time by summing each condition's slowest
+pilot image throughput including validation, multiplied by 1.25 for overhead. Fix the largest common epoch
 count <=20 fitting the optimization allocation. If fewer than one epoch fits or pilot cannot finish,
 record a feasibility failure and do not quietly shrink the architecture. If required replication
 exceeds budget/cap, publish exploratory results and the estimated shortfall. Reaching a deadline
 saves resumable state; incomplete runs are not counted as completed confirmatory pairs.
+
+**Allocation amendment, 2026-10-27, during pilot and before schedule freeze/test evaluation:** the
+initial conservative implementation applied the single slowest architecture's cost to all conditions.
+Measured scalar QR runtime is roughly three times the block runtime. The revised forecast sums each
+condition's own slowest pilot cost, retaining the same 25% allowance, common epoch count, replication
+rule and 20-hour optimization cap. This is a timing-only correction; test outcomes remain unseen.
 
 ## Analysis and safeguards
 
