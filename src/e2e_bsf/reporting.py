@@ -56,6 +56,27 @@ def result_table(summaries):
     return "\n".join(lines)
 
 
+def update_readme(report, label, narrative, table, controls):
+    """Local: replace a bounded generated section; global: README never promises unmeasured results."""
+    path = Path("README.md")  # Human-written setup and method sections remain intact.
+    begin, end = "<!-- measured-results:start -->", "<!-- measured-results:end -->"
+    original = path.read_text(encoding="utf-8")
+    if begin not in original or end not in original:
+        return  # A downstream user may intentionally remove the generated section.
+    control_table = "\n".join(f"| {name} | {row['kl']:.6g} | {row['accuracy']:.2%} | {row['nmse']:.5g} |"
+                              for name, row in controls.items())
+    content = (f"{begin}\n\n**{label}**\n\n{narrative}\n\n{table}\n\n"
+               "| Control | Test KL (nats/image) | Accuracy | NMSE |\n|---|---:|---:|---:|\n" + control_table +
+               f"\n\n![Measured comparison]({report.as_posix()}/figures/comparison.png)\n\n"
+               f"![Fixed development block maps]({report.as_posix()}/figures/maps.png)\n\n"
+               f"[Detailed results and limitations]({report.as_posix()}/summary.md) · "
+               f"[PDF paper]({report.as_posix()}/paper.pdf) · "
+               "[Interactive explorer](https://burnycoder.github.io/end-to-end-block-sparse-featurizers/)\n\n" + end)
+    before, remainder = original.split(begin, 1)  # Replace evidence only, not unrelated documentation.
+    _, after = remainder.split(end, 1)
+    path.write_text(before + content + after, encoding="utf-8")
+
+
 def plot_evidence(summaries, histories, destination):
     """Local: simple honest axes; global: show all methods without cropping away failures."""
     destination.mkdir(parents=True, exist_ok=True)
@@ -121,6 +142,9 @@ def build_report(config, logger):
     report.mkdir(parents=True, exist_ok=True)
     summaries_paths = sorted((root / "runs").glob("*/test_summary.json"))
     results = [read_json(path) for path in summaries_paths if not path.parent.name.startswith("pilot_")]
+    for row, path in zip(results, [path for path in summaries_paths if not path.parent.name.startswith("pilot_")]):
+        run_path = path.parent / "run.json"
+        row["runtime"] = read_json(run_path) if run_path.exists() else None  # Keep measured resource evidence with metrics.
     summaries, primary = aggregate_results(results)
     histories = {}
     for path in summaries_paths:
@@ -131,12 +155,19 @@ def build_report(config, logger):
     schedule = read_json(root / "study_schedule.json") if (root / "study_schedule.json").exists() else None
     status = read_json(root / "study_status.json") if (root / "study_status.json").exists() else {"status": "smoke"}
     label = "Engineering smoke experiment: one seed, small data and dictionary; no confirmatory claim." if config.profile == "smoke" else "Bounded preregistered study; interpret completion and power status below."
+    if config.profile == "full" and (status["status"] != "complete" or not schedule or schedule["exploratory"]):
+        label += " Exploratory: replication, power or completion criteria were not all met."
     narrative = "No paired test measurements are available."
     if primary["n_pairs"]:
         effect = primary["mean_improvement"]
         narrative = f"Mean paired local-minus-KL difference: {effect:.6g} nats/image over {primary['n_pairs']} seed(s). "
         narrative += "KL training had lower mean output divergence." if effect > 0 else "KL training did not improve mean output divergence."
-        narrative += f" Seed-level 95% interval: {primary.get('ci95')}."
+        narrative += (f" Seed-level 95% interval: {primary['ci95']}." if primary.get("ci95")
+                      else " A seed-level confidence interval cannot be estimated from one seed.")
+        if primary.get("ci95") and primary["ci95"][0] <= 0 <= primary["ci95"][1]:
+            narrative += " The interval includes zero; the directional comparison is inconclusive."
+        if effect <= 0:
+            narrative += " The observed nonpositive improvement contradicts the directional hypothesis."
     table = result_table(summaries)
     plot_evidence(summaries, histories, report / "figures")
     plot_history(histories, report / "figures")
@@ -158,7 +189,7 @@ def build_report(config, logger):
             "The frozen teacher is DINOv3 plus the fitted patch classifier. Lower KL is readout fidelity, "
             "not proof of semantic concepts or preservation of all DINO representations.\n\n"
             "## Controls\n\n" + "\n".join(f"- {name}: KL {value['kl']:.6g}, accuracy {value['accuracy']:.2%}, NMSE {value['nmse']:.6g}." for name, value in controls.items()) +
-            "\n\n## Figures\n\n![Comparison](figures/comparison.png)\n\n![Training](figures/training.png)\n\n"
+            "\n\n## Figures\n\n![Comparison](figures/comparison.png)\n\n![Training](figures/training.png)\n\n![Development maps](figures/maps.png)\n\n"
             "## Learning and limitations\n\nThe comparison separates behavior from reconstruction. "
             "A lower output KL can coincide with higher patch MSE or degraded map structure. "
             "The ten-class head constrains at most nine logit contrasts per image. "
@@ -166,6 +197,7 @@ def build_report(config, logger):
             "training variability. The pilot variance is estimated from short runs. "
             "All run metrics, settings, uncertainty and intervention outputs are in results.json.\n")
     (report / "summary.md").write_text(text, encoding="utf-8")
+    update_readme(report, label, narrative, table, controls)
     for path in summaries_paths:
         row = read_json(path)
         details = (f"# {path.parent.name}\n\nRecorded outcome of a prespecified condition; "

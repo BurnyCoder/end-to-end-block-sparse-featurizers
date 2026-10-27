@@ -35,7 +35,7 @@ def evaluate(config, logger, deadline=None):
         from .io import load_checkpoint  # Read status without loading a live model.
         if load_checkpoint(checkpoint)["status"] == "complete":
             results.append(evaluate_checkpoint(config, checkpoint, logger, deadline=deadline))
-    evaluate_controls(config, logger)
+    evaluate_controls(config, logger, deadline=deadline)
     return results
 
 
