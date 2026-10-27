@@ -172,6 +172,21 @@ def write_paper(destination, evidence, markdown_table):
             inactive = sum(row["selected_energy"] == 0 for row in rows)
             paragraph(escape(diagnostic["condition"]) + f", seed {diagnostic['seed']}, {len(rows)} examples ({inactive} inactive selected blocks): " + escape(compact) + " (mean KL change).", "SmallBody")
     heading("6. Discussion, limitations and implications")
+    # Local: compare published outcomes; global: distinguish a qualitative analogy from replication.
+    # Source: https://arxiv.org/html/2405.12241v2#S3.SS2 (Sections 3.1-3.2 and Table 1).
+    paragraph("Comparison with Braun et al. [1]. Their language-model SAEs improve the sparsity/performance tradeoff while "
+              "pure end-to-end training reconstructs activations less accurately (Sections 3.1-3.2). In GPT2-small layer 6, "
+              "Table 1 reports 69.4 active features and a 0.145 cross-entropy increase for local training, versus 27.5 and "
+              "0.144 for end-to-end training: approximately 60% fewer active features at similar performance loss. "
+              "These cross-entropy increases are distinct from our forward-KL metric. Their ReLU SAEs use L1 sparsity sweeps; "
+              "ours use fixed TopK with tied signed blocks. Their downstream reconstruction penalty (Section 2.4) reduces "
+              "later-layer MSE toward the local baseline, whereas our 0.1 MSE penalty acts on insertion-layer patches.")
+    if evidence["profile"] == "full" and "block_kl" in by_condition and "block_mse" in by_condition:
+        # Local: qualify the current study's comparison; global: preserve its registered seed uncertainty.
+        paragraph("Output fidelity and activation reconstruction are distinct outcomes in both studies. " + escape(evidence["narrative"]) +
+                  " A positive mean alone is insufficient. Fixed sparsity and a ten-class readout do not establish "
+                  "their broader Pareto or interpretability findings. Worse reconstruction alone neither refutes output matching "
+                  "nor demonstrates more interpretable features or recovery of the original model's computation.")
     if "block_kl" in by_condition and "block_mse" in by_condition:
         paragraph(f"Block local-MSE versus KL conditional stable rank is {local['stable_rank']:.3f} versus {proposed['stable_rank']:.3f}; "
                   f"normalized-map total variation is {local['map_tv']:.3f} versus {proposed['map_tv']:.3f}, and Dirichlet energy "
@@ -191,7 +206,7 @@ def write_paper(destination, evidence, markdown_table):
     paragraph("The implementation supplies a reproducible test of output-KL training for structured sparse vision codes. " + escape(evidence["narrative"]) +
               " Claims are restricted to the measured teacher, data, architecture and compute allocation.")
     heading("References")
-    sources = [("1. Braun et al. Identifying Functionally Important Features with End-to-End Sparse Dictionary Learning (2024)", "https://arxiv.org/abs/2405.12241"),
+    sources = [("1. Braun et al. Identifying Functionally Important Features with End-to-End Sparse Dictionary Learning (2024), v2, Sections 2.4 and 3.1-3.2, Table 1", "https://arxiv.org/html/2405.12241v2"),
                ("2. Fel et al. Structuring Sparsity: Block-Sparse Featurizers Capture Visual Concept Manifolds (2026)", "https://arxiv.org/abs/2606.25234"),
                ("3. Revisiting End To End Sparse Autoencoder Training: A Short Finetune is All You Need (2025)", "https://arxiv.org/abs/2503.17272"),
                ("4. A Deeper Analysis of Block-Sparse Featurizers (2026)", "https://arxiv.org/abs/2608.27515"),
