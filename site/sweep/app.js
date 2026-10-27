@@ -2,7 +2,14 @@
  * Sources: https://plotly.com/javascript/line-charts/ and MDN DOM documentation. */
 const $ = id => document.getElementById(id);
 const layout = title => ({title, margin: {t: 45, r: 25, b: 65, l: 75}, paper_bgcolor: '#fff', plot_bgcolor: '#fff'});
-const draw = (id, traces, options = {}) => Plotly.react(id, traces, {...layout(''), ...options}, {responsive: true, displaylogo: false});
+const draw = (id, traces, options = {}) => {
+  const settings = {...layout(''), ...options};
+  // Plotly 3 requires title objects: https://plotly.com/javascript/figure-labels/.
+  for (const item of [settings, settings.xaxis, settings.yaxis]) {
+    if (item && typeof item.title === 'string') item.title = {text: item.title};
+  }
+  return Plotly.react(id, traces, settings, {responsive: true, displaylogo: false});
+};
 const option = (select, label, value) => select.add(new Option(label, value));
 let evidence;
 
