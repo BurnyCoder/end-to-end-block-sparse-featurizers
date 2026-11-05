@@ -208,13 +208,13 @@ def write_paper(destination, evidence, markdown_table):
     heading("References")
     sources = [("1. Braun et al. Identifying Functionally Important Features with End-to-End Sparse Dictionary Learning (2024), v2, Sections 2.4 and 3.1-3.2, Table 1", "https://arxiv.org/html/2405.12241v2"),
                ("2. Fel et al. Structuring Sparsity: Block-Sparse Featurizers Capture Visual Concept Manifolds (2026)", "https://arxiv.org/abs/2606.25234"),
-               ("3. Revisiting End To End Sparse Autoencoder Training: A Short Finetune is All You Need (2025)", "https://arxiv.org/abs/2503.17272"),
-               ("4. A Deeper Analysis of Block-Sparse Featurizers (2026)", "https://arxiv.org/abs/2608.27515"),
+               ("3. Karvonen. Revisiting End-To-End Sparse Autoencoder Training: A Short Finetune Is All You Need (2025)", "https://arxiv.org/abs/2503.17272"),
+               ("4. Jerpelea and Ananthram. A Deeper Analysis of Block-Sparse Featurizers (2026)", "https://arxiv.org/abs/2608.27515"),
                ("5. DINOv3 reference implementation and model documentation", "https://github.com/facebookresearch/dinov3"),
                ("6. Imagenette dataset source", "https://github.com/fastai/imagenette"),
                ("7. Goodfire implementation, revision 219f121", "https://github.com/goodfire-ai/block-sparse-featurizer/tree/219f121ea82d2b19200d1dac918396e6058d7eb9"),
                ("8. Apollo implementation, revision 83b4add", "https://github.com/ApolloResearch/e2e_sae/tree/83b4add4d2652a4e5c6775a0e2b752897c871a87"),
-               ("9. SAEBench: A Comprehensive Benchmark for Sparse Autoencoders (2025)", "https://proceedings.mlr.press/v267/karvonen25a.html"),
+               ("9. Karvonen et al. SAEBench: A Comprehensive Benchmark for Sparse Autoencoders in Language Model Interpretability (2025)", "https://proceedings.mlr.press/v267/karvonen25a.html"),
                ("10. Card et al. With Little Power Comes Great Responsibility (2020)", "https://aclanthology.org/2020.emnlp-main.745/"),
                ("11. Lones. How to avoid machine learning pitfalls (2021)", "https://arxiv.org/abs/2108.02497")]
     for label, url in sources:
