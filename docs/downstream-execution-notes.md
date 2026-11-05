@@ -14,7 +14,8 @@ A read-only check on the first training images compared batch sizes two and eigh
 raw states (blocks 6–12), teacher logits and identity-suffix logits matched exactly. At two, the maximum
 final-state difference was 0.02734375 on large-magnitude coordinates, RMS difference 0.0000990854,
 and teacher-logit maximum difference 0.0000104904. Identity downstream MSE remained below 1.24e-7.
-Full layer measurements are retained in `outputs/sweeps/downstream-v1/batch_numerics_diagnosis.json`.
+Full layer measurements are retained in `outputs/sweeps/downstream-v1/batch_numerics_diagnosis.json`;
+a committed copy is [reports/downstream-sweep/batch_numerics_diagnosis.json](../reports/downstream-sweep/batch_numerics_diagnosis.json).
 
 This agrees with [PyTorch's documented batch-versus-slice floating-point behavior](https://docs.pytorch.org/docs/stable/notes/numerical_accuracy.html#batched-computations-or-slice-computations).
 Verification now uses the cache's extraction batch size and only designated training images. Tolerances,
