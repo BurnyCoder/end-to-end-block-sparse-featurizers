@@ -31,8 +31,8 @@ will be reported. The completed final-layer study remains unchanged.
 
 The repaired real-image check passed at 19:37:46 UTC. All seven states and the two objective values
 matched exactly at batch size eight; the maximum BSF-gradient difference was 1.78814e-7. Identity KL
-was zero, while mean replacement gave KL 4.66014. Fifty fixed-batch optimizer updates reduced recorded
-training KL from 2.29414 to 0.0000396106. This validates the connected implementation on eight training
+was zero, while mean replacement gave KL 4.66014. Across 50 fixed-batch optimizer updates, the recorded
+pre-update training KL fell from 2.29414 (initial model) to 0.0000396106 (after 49 updates). This validates the connected implementation on eight training
 images; it is not held-out effectiveness evidence.
 
 Pilots resumed at 19:38 UTC. The original preparation deadline stopped execution at **20:00:02 UTC**
@@ -45,6 +45,14 @@ Preparation took approximately 68 minutes: extraction 26.5, training-only statis
 hashing 17.7 minutes, plus loading and setup. The verification interruption and its detection/repair
 consumed more of the original allocation. The initial GPU feasibility timing did not establish the
 end-to-end cost of these CPU/storage phases. No stage deadline, seed, grid or exposure was changed.
+
+A post-hoc estimate in the [2026-11-22 independent audit](../reports/reviews/2026-11-22-independent-scientific-audit.md)
+uses the logged wall-clock gaps. The interruption cost about 31 minutes (19:08:01 to 19:38:55 UTC). Without it,
+about 52 minutes would have remained after preparation, less roughly one minute of verification. The logged
+pilots took 290 seconds for the first trial and 57–91 seconds afterwards. If larger-k pilots cost the same,
+50 trials would need about 51–55 minutes. Completion would therefore have been marginal at best: the interruption
+decided the 15/50 outcome, but the two-hour preparation allocation had essentially no slack. Values are in
+[the audit record](../reports/reviews/2026-11-22-claim-recheck.json).
 
 The [independent checkpoint audit](../reports/downstream-sweep/audit.json) checks all 16 started pilots,
 their shared initialization and image order, finite weights, unchanged readout/normalization, isolated
