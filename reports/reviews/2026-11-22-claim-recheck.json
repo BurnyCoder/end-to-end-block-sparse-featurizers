@@ -1,0 +1,252 @@
+{
+  "audited_at_utc": "2026-11-22T18:25:10.583336+00:00",
+  "scope": "read-only; no model inference or training",
+  "pilot": {
+    "selected_learning_rates": {
+      "block_mse": 0.0003,
+      "block_kl": 0.0003,
+      "block_kl_mse": 0.0003,
+      "scalar_mse": 0.0001,
+      "scalar_kl": 0.0003
+    },
+    "matches_frozen_schedule": true,
+    "standardized_effect": 1.6263222207885482,
+    "relative_sd": 0.06148842998130678,
+    "power_at_five": 0.774706538819405,
+    "required_seeds": 6,
+    "pilot_mean_relative_kl_reduction_percent": 23.953631572732203
+  },
+  "primary": {
+    "mean_difference": 0.002545958012342453,
+    "ci95": [
+      -0.0032590852531916973,
+      0.008351001277876604
+    ],
+    "t": 1.2176847506677249,
+    "p_two_sided": 0.29026199133707115,
+    "seeds_favoring_kl": 3,
+    "relative_kl_reduction_percent": 6.776223640463328,
+    "ci95_percent_of_local_kl": [
+      -8.674255597264919,
+      22.226702878191578
+    ],
+    "registered_minimum_practical_effect_percent": 10.0,
+    "point_estimate_below_minimum_practical_effect": true,
+    "exact_sign_flip_p": 0.375,
+    "smallest_attainable_exact_p_with_five_pairs": 0.0625,
+    "wilcoxon_exact_p": 0.4375,
+    "post_hoc_sensitivity": {
+      "label": "post hoc; uses the main-study seed SD for the preregistered 10% effect, not the observed effect",
+      "pilot_relative_difference_sd": 0.06148842998130678,
+      "main_relative_difference_sd": 0.1244336572541321,
+      "standardized_10_percent_effect": 0.8036410904147019,
+      "power_at_five_seeds": 0.2830342013765522,
+      "seeds_for_80_percent_power": 14.192786910266832
+    }
+  },
+  "scalar_secondary": {
+    "mean_difference": 0.22316357977688311,
+    "ci95": [
+      0.2069886183101098,
+      0.23933854124365642
+    ],
+    "learning_rates": {
+      "scalar_mse": 0.0001,
+      "scalar_kl": 0.0003
+    }
+  },
+  "local_predictions": {
+    "available": true,
+    "condition_means_from_arrays": {
+      "block_kl_mse": {
+        "kl": 0.033449084488617165,
+        "accuracy": 0.9926709677419355,
+        "nmse": 0.7681227101572098
+      },
+      "block_kl": {
+        "kl": 0.035025971845194584,
+        "accuracy": 0.9937032258064515,
+        "nmse": 0.7872756001011018
+      },
+      "block_mse": {
+        "kl": 0.03757193056378734,
+        "accuracy": 0.9849290322580645,
+        "nmse": 0.5451522261619568
+      },
+      "scalar_kl": {
+        "kl": 0.03092954913321076,
+        "accuracy": 0.9904516129032258,
+        "nmse": 0.7937808625528888
+      },
+      "scalar_mse": {
+        "kl": 0.2540931355926176,
+        "accuracy": 0.9073548387096775,
+        "nmse": 0.6643734841023722
+      }
+    },
+    "within_seed_paired_bootstrap": [
+      {
+        "seed": 100,
+        "mean_difference": -0.0022546298064653673,
+        "paired_image_group_ci95": [
+          -0.007982851699347546,
+          0.0029363647869390364
+        ]
+      },
+      {
+        "seed": 101,
+        "mean_difference": 0.0011107296803114603,
+        "paired_image_group_ci95": [
+          -0.004538368849225353,
+          0.006725757321200577
+        ]
+      },
+      {
+        "seed": 102,
+        "mean_difference": 0.0086246159902678,
+        "paired_image_group_ci95": [
+          0.0035441430687851356,
+          0.014008460902652927
+        ]
+      },
+      {
+        "seed": 103,
+        "mean_difference": -0.0009365325837686916,
+        "paired_image_group_ci95": [
+          -0.006732136177057701,
+          0.004713189000388083
+        ]
+      },
+      {
+        "seed": 104,
+        "mean_difference": 0.006185610312618594,
+        "paired_image_group_ci95": [
+          0.000904406055072253,
+          0.011456348790729058
+        ]
+      }
+    ],
+    "label": "post hoc; conditional on each trained pair, so it does not measure training-seed uncertainty"
+  },
+  "interventions": {
+    "block_kl_mse": {
+      "targets": 20,
+      "inactive_selected": 4,
+      "random_to_selected_energy_ratio": [
+        0.20713346786264739,
+        1.2486542003258136
+      ],
+      "mean_kl_change": {
+        "remove_selected": 0.0008410935325201763,
+        "remove_random_matched": 0.005309518114762568,
+        "swap_same_class": 0.0006743982650107228,
+        "swap_other_class": 0.0008261282838731177
+      }
+    },
+    "block_kl": {
+      "targets": 20,
+      "inactive_selected": 3,
+      "random_to_selected_energy_ratio": [
+        0.25587745407018553,
+        1.050061169244577
+      ],
+      "mean_kl_change": {
+        "remove_selected": -0.0006901406338585047,
+        "remove_random_matched": -0.0009500450825981943,
+        "swap_same_class": -0.0005520216711772718,
+        "swap_other_class": -0.0006881966073052581
+      }
+    },
+    "block_mse": {
+      "targets": 20,
+      "inactive_selected": 0,
+      "random_to_selected_energy_ratio": [
+        0.11524196304215477,
+        1.0899703714318576
+      ],
+      "mean_kl_change": {
+        "remove_selected": 0.03933351698411869,
+        "remove_random_matched": -0.0001418980341057363,
+        "swap_same_class": -0.011472645407147297,
+        "swap_other_class": 0.03933394421924348
+      }
+    },
+    "scalar_kl": {
+      "targets": 20,
+      "inactive_selected": 4,
+      "random_to_selected_energy_ratio": [
+        0.4407950230192195,
+        1.1538887246210943
+      ],
+      "mean_kl_change": {
+        "remove_selected": 0.0016195071539499394,
+        "remove_random_matched": -0.00014767821962493599,
+        "swap_same_class": 0.003827344223776663,
+        "swap_other_class": 0.001619179963867623
+      }
+    },
+    "scalar_mse": {
+      "targets": 20,
+      "inactive_selected": 0,
+      "random_to_selected_energy_ratio": [
+        0.4014909734712337,
+        1.1088804328051907
+      ],
+      "mean_kl_change": {
+        "remove_selected": 0.011390146722442296,
+        "remove_random_matched": 0.007342713424623071,
+        "swap_same_class": 0.009511204244518012,
+        "swap_other_class": 0.014986183095061278
+      }
+    }
+  },
+  "study_timing": {
+    "started": "2026-10-27T01:02:10Z",
+    "schedule_frozen_minutes": 140.59182756741842,
+    "evaluation_completed": "2026-10-27T12:54:34Z",
+    "deadline": "2026-10-28T01:02:10Z",
+    "training_hours": 9.326215277777786,
+    "peak_allocated_mib": 699.28857421875,
+    "five_seed_forecast_hours": 18.534697950932017,
+    "six_seed_forecast_hours": 22.241637541118422,
+    "last_pilot_minutes": 90.28475258333333,
+    "last_training": "2026-10-27T12:42:54",
+    "first_test_evaluation": "2026-10-27T12:43:30",
+    "first_complete_report": "2026-10-27T13:01:16"
+  },
+  "sweep": {
+    "pilots": {
+      "complete": 15,
+      "trained_epoch": 1,
+      "not_started": 34
+    },
+    "kl_below_mse_matched": [
+      4,
+      4
+    ],
+    "completed_dev_accuracy_range": [
+      0.11599999666213989,
+      0.30000001192092896
+    ],
+    "stage_minutes": {
+      "extraction": 26.95,
+      "training_statistics": 23.383333333333333,
+      "hashing": 17.716666666666665
+    },
+    "interruption_minutes": 30.9,
+    "verified_at": "2026-10-27T19:37:46",
+    "counterfactual": {
+      "label": "post hoc estimate from logged wall-clock gaps; assumes k>=16 pilots cost like k<=8 pilots",
+      "minutes_left_after_preparation": 52.02501529455185,
+      "first_pilot_seconds": 290.0,
+      "later_pilot_seconds": [
+        57.0,
+        91.0
+      ],
+      "estimated_minutes_for_50": [
+        51.38333333333333,
+        55.46666666666667
+      ]
+    }
+  }
+}
