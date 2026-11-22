@@ -3,7 +3,7 @@
 import numpy as np  # Synthetic inputs have known ground truth.
 
 from e2e_bsf.data import assign_splits, exclude_previewed_test_groups
-from e2e_bsf.statistics import paired_summary, required_seeds
+from e2e_bsf.statistics import design_sensitivity, exact_sign_flip, paired_summary, required_seeds
 
 
 def test_duplicate_groups_do_not_cross_splits():
@@ -44,3 +44,21 @@ def test_high_pilot_effect_uses_minimum_replication_without_solver_failure():
     result = required_seeds({0: .65, 1: .67, 2: .69}, {0: .59, 1: .609, 2: .628})
     assert result["required"] == 5
     assert result["power_at_five"] >= .8
+
+
+def test_exact_sign_flip_has_the_known_five_pair_floor():
+    """With five pairs, an exact two-sided paired permutation test cannot fall below 2/32."""
+    p_all_positive, floor = exact_sign_flip([1.0, 2.0, 3.0, 4.0, 5.0])
+    assert floor == 2 / 32 and p_all_positive == floor  # Only the observed pattern and its negation reach |mean|.
+    p_mixed, _ = exact_sign_flip([1.0, -1.0, 1.0, -1.0])
+    assert p_mixed == 1.0  # A zero mean is matched or exceeded by every relabeling.
+
+
+def test_design_sensitivity_uses_registered_relative_effect_not_observed_effect():
+    """Post-hoc sensitivity standardizes 10% of local KL by the realized seed SD of paired differences."""
+    local, kl = np.array([1.0, 1.1, 0.9, 1.0]), np.array([0.9, 1.05, 0.88, 0.97])
+    result = design_sensitivity(local, kl)
+    differences = local - kl
+    assert np.isclose(result["standardized_minimum_effect"], 0.1 * local.mean() / differences.std(ddof=1))
+    assert np.isclose(result["relative_effect"], differences.mean() / local.mean())
+    assert 0 < result["power_at_n"] < 1 and result["smallest_exact_p"] == 2 / 16
