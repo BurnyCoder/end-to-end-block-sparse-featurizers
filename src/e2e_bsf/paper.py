@@ -4,11 +4,16 @@ Sources: https://docs.reportlab.com/reportlab/userguide/ch5_platypus/.
 No numbers are invented; the paper receives the same results object as the explorer.
 """
 
+import math  # Round required seed counts up, as the registered power rule does.
 from xml.sax.saxutils import escape  # Paragraph markup must not execute arbitrary artifact text.
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak, KeepTogether
+
+from .statistics import design_sensitivity  # Shared post-hoc sensitivity, also used by scripts/recheck_claims.py.
+
+AUTHOR = "Libor “Burny” Burian"  # Author line requested in the human specification.
 
 
 def write_paper(destination, evidence, markdown_table):
@@ -41,7 +46,8 @@ def write_paper(destination, evidence, markdown_table):
                                        Paragraph(caption, styles["SmallBody"])]))
 
     paragraph("End-to-End Block-Sparse Featurizers for a Frozen Vision Readout", "PaperTitle")
-    paragraph("Libor Burian", "Heading2")
+    paragraph(AUTHOR, "Heading2")
+    paragraph("Study completed 2026-10-27; independent audit revision 2026-11-22.", "SmallBody")
     paragraph(escape(evidence["label"]))
     heading("Abstract")
     paragraph("We study whether output-distribution matching can train a block-sparse representation that preserves a fixed vision classifier. "
@@ -53,7 +59,7 @@ def write_paper(destination, evidence, markdown_table):
     paragraph("Local sparse dictionary learning rewards activation reconstruction, whereas end-to-end sparse dictionary learning [1] "
               "rewards preservation of downstream output distributions. Block-sparse featurizers [2] group signed coordinates into "
               "low-dimensional charts, motivated by superposed manifolds. We combine the released Grassmannian implementation with "
-              "the executable forward-KL convention of [1]. Prior work studies short KL fine-tuning [3]; this experiment instead "
+              "the executable forward-KL convention of [1]. Prior work studies short KL+MSE fine-tuning of locally trained SAEs [3]; this experiment instead "
               "trains every BSF condition from scratch. Later BSF analysis [4] motivates caution about splitting and stability.")
     paragraph("DINOv3 [5] produces embeddings. Consequently, the original model here is explicitly DINOv3 plus one independently fitted, "
               "then frozen, patch-only Imagenette classifier. The dataset and classifier are smaller adaptations of [2], not a "
@@ -137,12 +143,28 @@ def write_paper(destination, evidence, markdown_table):
                   f"Both have {local['parameters']:,} trainable parameters. Accuracy differences are secondary outcomes: "
                   "training matched the teacher distributions and did not optimize held-out class labels. A higher observed "
                   "accuracy than the teacher does not demonstrate broad representation preservation.")
+        seeds = evidence["primary"]["per_seed"]
+        if len(seeds) > 1 and evidence["schedule"]:
+            # Local: post-hoc design check; global: the registered 10% effect, never the observed effect [12].
+            check = design_sensitivity([row["local_kl"] for row in seeds], [row["proposed_kl"] for row in seeds])
+            pilot = evidence["schedule"]["power"]  # Pilot SD/local KL equals 0.1 / standardized pilot effect.
+            paragraph(f"Post-hoc sensitivity (audit, not a registered test). The relative reduction, {check['relative_effect']:.2%}, is below "
+                      f"the preregistered {check['minimum_relative_effect']:.0%} minimum practical effect; the seed interval spans "
+                      f"{check['ci95_relative'][0]:.1%} to {check['ci95_relative'][1]:.1%} of local-MSE KL. The paired-difference SD was "
+                      f"{check['relative_difference_sd']:.1%} of local-MSE KL, versus "
+                      f"{check['minimum_relative_effect'] / pilot['effect_size']:.1%} in the {pilot['pilot_pairs']} short pilot pairs. "
+                      f"At this realized SD, {len(seeds)} seeds give {check['power_at_n']:.0%} power for the "
+                      f"{check['minimum_relative_effect']:.0%} effect, and {math.ceil(check['n_for_80_percent'])} seeds would be needed for 80%. "
+                      f"An exact sign-flip test gives p={check['exact_sign_flip_p']:.3g}; with {len(seeds)} pairs it cannot fall below "
+                      f"{check['smallest_exact_p']:.4g}. The design was therefore less sensitive than the pilot power estimate implied.")
     scalar = evidence["secondary_scalar"]
     if scalar.get("ci95"):
         paragraph(f"Secondary scalar local-minus-KL difference: {scalar['mean_improvement']:.6g} nats/image, "
                   f"with paired seed interval [{scalar['ci95'][0]:.6g}, {scalar['ci95'][1]:.6g}]. "
                   "This is a descriptive secondary comparison without multiplicity correction. "
-                  f"Scalar models have {by_condition['scalar_kl']['parameters']:,} parameters, including their additional per-block gains.")
+                  f"Scalar models have {by_condition['scalar_kl']['parameters']:,} parameters, including their additional per-block gains. "
+                  f"Pilot-selected learning rates differ (scalar MSE {evidence['schedule']['learning_rates']['scalar_mse']:g}, scalar KL "
+                  f"{evidence['schedule']['learning_rates']['scalar_kl']:g}), so this contrast also includes that difference.")
     heading("Paired primary measurements")
     for row in evidence["primary"]["per_seed"]:
         local_ci, proposed_ci = row["local_image_ci95"], row["proposed_image_ci95"]
@@ -170,7 +192,9 @@ def write_paper(destination, evidence, markdown_table):
                       for name in ("remove_selected", "remove_random_matched", "swap_same_class", "swap_other_class")}
             compact = "; ".join(f"{name}: {value:.5g}" for name, value in values.items())
             inactive = sum(row["selected_energy"] == 0 for row in rows)
-            paragraph(escape(diagnostic["condition"]) + f", seed {diagnostic['seed']}, {len(rows)} examples ({inactive} inactive selected blocks): " + escape(compact) + " (mean KL change).", "SmallBody")
+            ratios = [row["random_energy"] / row["selected_energy"] for row in rows if row["selected_energy"] > 0]
+            matching = f"; random/selected energy ratio {min(ratios):.2f}-{max(ratios):.2f}" if ratios else ""
+            paragraph(escape(diagnostic["condition"]) + f", seed {diagnostic['seed']}, {len(rows)} examples ({inactive} inactive selected blocks{matching}): " + escape(compact) + " (mean KL change).", "SmallBody")
     heading("6. Discussion, limitations and implications")
     # Local: compare published outcomes; global: distinguish a qualitative analogy from replication.
     # Source: https://arxiv.org/html/2405.12241v2#S3.SS2 (Sections 3.1-3.2 and Table 1).
@@ -210,28 +234,30 @@ def write_paper(destination, evidence, markdown_table):
                ("2. Fel et al. Structuring Sparsity: Block-Sparse Featurizers Capture Visual Concept Manifolds (2026)", "https://arxiv.org/abs/2606.25234"),
                ("3. Karvonen. Revisiting End-To-End Sparse Autoencoder Training: A Short Finetune Is All You Need (2025)", "https://arxiv.org/abs/2503.17272"),
                ("4. Jerpelea and Ananthram. A Deeper Analysis of Block-Sparse Featurizers (2026)", "https://arxiv.org/abs/2608.27515"),
-               ("5. DINOv3 reference implementation and model documentation", "https://github.com/facebookresearch/dinov3"),
+               ("5. Siméoni et al. DINOv3 (2025), arXiv:2508.10104; reference implementation at github.com/facebookresearch/dinov3", "https://arxiv.org/abs/2508.10104"),
                ("6. Imagenette dataset source", "https://github.com/fastai/imagenette"),
                ("7. Goodfire implementation, revision 219f121", "https://github.com/goodfire-ai/block-sparse-featurizer/tree/219f121ea82d2b19200d1dac918396e6058d7eb9"),
                ("8. Apollo implementation, revision 83b4add", "https://github.com/ApolloResearch/e2e_sae/tree/83b4add4d2652a4e5c6775a0e2b752897c871a87"),
                ("9. Karvonen et al. SAEBench: A Comprehensive Benchmark for Sparse Autoencoders in Language Model Interpretability (2025)", "https://proceedings.mlr.press/v267/karvonen25a.html"),
                ("10. Card et al. With Little Power Comes Great Responsibility (2020)", "https://aclanthology.org/2020.emnlp-main.745/"),
-               ("11. Lones. How to avoid machine learning pitfalls (2021)", "https://arxiv.org/abs/2108.02497")]
+               ("11. Lones. How to avoid machine learning pitfalls (2021)", "https://arxiv.org/abs/2108.02497"),
+               ("12. Hoenig and Heisey. The Abuse of Power. The American Statistician 55(1):19-24 (2001)", "https://doi.org/10.1198/000313001300339897")]
     for label, url in sources:
         paragraph(f'<link href="{url}" color="#1d5c8b">{escape(label)}</link>', "SmallBody")
     heading("Appendix: reproducibility and AI statement")
     paragraph('Code, preregistration, lockfile, run tables and model releases: <link href="https://github.com/BurnyCoder/end-to-end-block-sparse-featurizers" color="#1d5c8b">project repository</link>. '
               "Per-run checkpoints bind preprocessing, the frozen classifier, source revisions and data manifests. Original images and gated backbone weights are not redistributed.")
-    paragraph("AI statement: Codex wrote this codebase and paper. Human cleanup and rewriting are in progress. A human provided the exact specification that Codex executed.", "SmallBody")
+    paragraph("AI statement: Codex wrote the original codebase and paper. Claude Code performed the 2026-11-22 independent audit and its corrections. "
+              "Human cleanup and rewriting are in progress. A human provided the exact specification that the agents executed.", "SmallBody")
     document = SimpleDocTemplate(str(destination / "paper.pdf"), pagesize=(612, 792),
                                   rightMargin=50, leftMargin=50, topMargin=48, bottomMargin=44,
-                                  title="End-to-End Block-Sparse Featurizers for a Frozen Vision Readout", author="Libor Burian")
+                                  title="End-to-End Block-Sparse Featurizers for a Frozen Vision Readout", author=AUTHOR)
 
     def footer(canvas, document):
         """Local: page numbering; global: make exported evidence easy to navigate."""
         canvas.setFont("Helvetica", 8)
         canvas.setFillColor(colors.HexColor("#526275"))
-        canvas.drawString(50, 25, "Libor Burian | End-to-End Block-Sparse Featurizers")
+        canvas.drawString(50, 25, f"{AUTHOR} | End-to-End Block-Sparse Featurizers")
         canvas.drawRightString(562, 25, str(document.page))
 
     document.build(story, onFirstPage=footer, onLaterPages=footer)

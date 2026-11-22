@@ -32,7 +32,10 @@ No follow-up Hugging Face collection was created because no completed evaluated 
 **Completed, 2026-10-27:** all 25 runs and 3,875-image test evaluations finished within the original
 24-hour limit. Five paired seeds received one epoch each. The study is exploratory: the pilot-based
 power estimate was 77.5%, below the 80% target, and training was short. Block KL reduced mean KL by
-6.78%, but its paired interval spans zero. Reconstruction error increased by 44.41%.
+6.78%, but its paired interval spans zero, and the point estimate is below the preregistered 10% minimum
+practical effect. Reconstruction error increased by 44.41%. A post-hoc check in the
+[independent audit](reports/reviews/2026-11-22-independent-scientific-audit.md) found the main-study seed
+variance about twice the pilot estimate, so the design was less sensitive than 77.5% suggests.
 See the [findings and independent audit](reports/study/findings.md) and
 [disclosed pilot allocation amendment](reports/study/pilot.md).
 The [plan completion checklist](docs/plan-completion.md) maps the requirements to verified artifacts and limitations.
@@ -73,7 +76,8 @@ Mean paired local-minus-KL difference: 0.00254596 nats/image over 5 seed(s). KL 
 <!-- measured-results:end -->
 
 The secondary scalar comparison favored KL: mean output divergence fell from 0.25409 to 0.03093,
-while reconstruction error rose. The mixed block objective had mean KL 0.03345, also with worse
+while reconstruction error rose. Pilot-selected learning rates differed (1e-4 for scalar MSE, 3e-4 for
+scalar KL), so this contrast is not an isolated objective change. The mixed block objective had mean KL 0.03345, also with worse
 reconstruction than local MSE. These results do not establish recovery of semantic concepts or
 preservation of all DINO information. The separate [engineering smoke study](reports/smoke/summary.md)
 and [experiment ledger](reports/experiments.md) retain the earlier positive and negative findings.

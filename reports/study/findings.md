@@ -4,7 +4,9 @@ The primary result is **inconclusive**. Block KL training reduced average held-o
 0.0375719 to 0.0350260 nats/image, a 6.78% reduction. The paired local-minus-KL effect is 0.00254596,
 with a 95% Student interval of **[-0.00325909, 0.00835100]** across five training seeds. Three seeds
 favored KL and two favored local MSE. The positive point estimate does not establish the directional
-hypothesis because the interval includes zero. No additional runs were added to change this result.
+hypothesis because the interval includes zero (paired t = 1.22, 4 df, p = 0.29). It is also below the
+preregistered 10% minimum practical effect: the interval spans -8.7% to +22.2% of local-MSE KL.
+No additional runs were added to change this result.
 
 The complete [condition table, individual seed effects, figures and run reports](summary.md) and
 [machine-readable measurements](results.json) are the numerical source. The [paper](paper.pdf) includes
@@ -39,7 +41,9 @@ with the documented [paper/code differences](../../docs/literature-review.md).
 - **Scalar comparison:** scalar KL reduced mean divergence from 0.254093 to 0.0309295 and raised mean
   accuracy from 90.74% to 99.05%. The paired scalar effect is 0.223164 nats/image, with a descriptive
   95% seed interval [0.206989, 0.239339]. NMSE increased from 0.66437 to 0.79378. This secondary interval
-  is not multiplicity-adjusted. It does not establish that block structure is unnecessary in general.
+  is not multiplicity-adjusted. Pilot-selected learning rates also differ (1e-4 for scalar MSE, 3e-4 for
+  scalar KL), so the contrast includes that difference. It does not establish that block structure is
+  unnecessary in general.
 - **Geometry:** block KL's normalized-map total variation and Dirichlet energy were higher than block
   MSE's (8.678 versus 7.090, and 1.058 versus 0.657). Conditional stable rank was 1.895 versus 1.797.
   All trained conditions used their specified active-coordinate budgets, and no block was dead across
@@ -58,7 +62,8 @@ replaced to make maps look more interpretable.
 Removal and predetermined same-class/other-class swaps used 20 test targets per condition, with only
 seed 100. These are exploratory interventions on the measured classifier, not replicated semantic
 causal effects. The random removal control selects among the eight nearest-energy active alternatives;
-it is approximate matching, not exact matching. For block KL, mixed block KL, and scalar KL respectively,
+it is approximate matching, not exact matching: where the selected block was active, the random block's
+energy ranged from 0.12 to 1.25 times the selected block's across the five dictionaries. For block KL, mixed block KL, and scalar KL respectively,
 the selected block had zero energy on 3, 4, and 4 of the 20 targets. Such targets were retained. Thus the
 selected and random intervention can differ in whether a nonzero contribution is removed.
 
@@ -75,6 +80,15 @@ calculation requested six seeds. Its conservative forecast required 22.24 hours 
 18.53 hours for five. A disclosed post-pilot amendment implemented the human-specified exploratory
 fallback before any main training or final test evaluation. Estimated power at five was 77.47%, not
 the target 80%, and that estimate itself comes from only three short pilot pairs.
+
+A post-hoc check in the [2026-11-22 independent audit](../reviews/2026-11-22-independent-scientific-audit.md)
+shows the estimate was optimistic. The main-study paired-difference SD was 12.4% of local-MSE KL, about
+twice the pilot's 6.1%. At that realized SD, five seeds have about 28% power for the registered 10% effect,
+and 15 seeds would be needed for 80%. An exact sign-flip test on five pairs cannot fall below p = 0.0625
+(observed p = 0.375). The pilots' mean KL reduction (24.0% after 510 images) was also far larger than the
+main study's 6.78%. This check uses the registered minimum effect, not the observed effect, because
+observed-effect power only restates the p-value ([Hoenig and Heisey, 2001](https://doi.org/10.1198/000313001300339897)).
+It changes no registered conclusion; all values are in [the audit record](../reviews/2026-11-22-claim-recheck.json).
 
 All main runs used the same one-epoch exposure. LR was selected by the same development-KL search
 for each condition: 3e-4 except scalar MSE at 1e-4. Consequently, objective comparisons describe each

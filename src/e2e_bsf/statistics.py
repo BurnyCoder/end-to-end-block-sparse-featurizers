@@ -4,6 +4,7 @@ Sources: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html
 https://www.statsmodels.org/stable/generated/statsmodels.stats.power.TTestPower.html.
 """
 
+from itertools import product  # Enumerate every sign pattern for the exact paired permutation test.
 import numpy as np  # Seeded resampling is reproducible.
 from scipy import stats  # Student intervals describe seed-level mean differences.
 from statsmodels.stats.power import TTestPower  # Standard paired-difference power calculation.
@@ -36,6 +37,45 @@ def bootstrap_images(values, groups, seed=42, replicates=2000):
         draw = rng.integers(0, len(unique), len(unique))
         means[i] = totals[draw].sum() / counts[draw].sum()
     return np.quantile(means, [0.025, 0.975]).tolist()
+
+
+def exact_sign_flip(differences):
+    """Local: exact two-sided paired permutation p-value; global: a check without the t normality assumption.
+
+    Enumerates all 2**n sign flips of the paired differences (https://en.wikipedia.org/wiki/Permutation_test).
+    A pattern and its negation give the same |mean|, so the smallest attainable p-value is 2 / 2**n.
+    """
+    differences = np.asarray(differences, dtype=float)
+    signs = np.array(list(product((1.0, -1.0), repeat=len(differences))))  # [2**n, n] sign patterns.
+    means = np.abs((signs * differences).mean(1))  # |mean| under every relabeling of within-pair order.
+    observed = abs(differences.mean())
+    return float(np.mean(means >= observed - 1e-15)), 2 / 2 ** len(differences)  # Tolerance keeps the observed pattern.
+
+
+def design_sensitivity(local, kl, minimum_relative=0.1):
+    """Local: post-hoc sensitivity of the paired seed design; global: compare realized seed noise with the pilot plan.
+
+    Uses the realized seed SD only for the preregistered minimum effect, never the observed effect:
+    observed-effect power is a transform of the p-value (Hoenig and Heisey, 2001,
+    https://doi.org/10.1198/000313001300339897). Results are labelled post hoc wherever reported.
+    """
+    local, kl = np.asarray(local, dtype=float), np.asarray(kl, dtype=float)
+    differences = local - kl  # Positive values favor the output-KL objective, as registered.
+    baseline = float(local.mean())
+    minimum = minimum_relative * baseline  # Same relative practical effect as the pilot power rule.
+    interval = stats.ttest_rel(local, kl).confidence_interval()
+    standardized = minimum / differences.std(ddof=1)
+    analysis = TTestPower()
+    p_flip, floor = exact_sign_flip(differences)
+    return {"relative_effect": float(differences.mean()) / baseline, "minimum_relative_effect": minimum_relative,
+            "ci95_relative": [float(interval.low) / baseline, float(interval.high) / baseline],
+            "relative_difference_sd": float(differences.std(ddof=1)) / baseline,
+            "standardized_minimum_effect": float(standardized),
+            "power_at_n": float(analysis.power(effect_size=standardized, nobs=len(differences), alpha=.05,
+                                               alternative="two-sided")),
+            "n_for_80_percent": float(analysis.solve_power(effect_size=standardized, alpha=.05, power=.8,
+                                                           alternative="two-sided")),
+            "exact_sign_flip_p": p_flip, "smallest_exact_p": floor}
 
 
 def required_seeds(local, kl):

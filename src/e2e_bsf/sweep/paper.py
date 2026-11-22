@@ -8,6 +8,8 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, KeepTogether
 
+from ..paper import AUTHOR  # One author line for both generated papers.
+
 
 def write_paper(destination, evidence):
     """Render the same evidence as the explorer; never substitute a selected favorable point."""
@@ -37,7 +39,8 @@ def write_paper(destination, evidence):
             story.append(KeepTogether([Image(str(path), width=width, height=height), Paragraph(caption, styles["Small"])]))
 
     paragraph("Downstream Reconstruction and Sparsity in End-to-End Vision Featurizers", "Title")
-    paragraph("Libor Burian", "Heading2")
+    paragraph(AUTHOR, "Heading2")
+    paragraph("Allocation stopped 2026-10-27; independent audit revision 2026-11-22.", "Small")
     paragraph(escape(evidence["label"]))
     heading("Abstract")
     paragraph("We implement a registered comparison of local reconstruction, output KL, and output KL plus raw downstream reconstruction for Grassmannian "
@@ -98,8 +101,10 @@ def write_paper(destination, evidence):
         paragraph(f"Implementation check on {len(verification['images'])} training images: maximum cached/online raw-state difference "
                   f"{verification['maximum_state_difference']:.6g}; maximum BSF-gradient difference "
                   f"{max(verification['maximum_gradient_difference'].values()):.6g}; identity KL {verification['identity_kl']:.6g}. "
-                  f"Fifty fixed-batch updates reduced recorded KL from {verification['fixed_batch_kl'][0]:.6g} to "
-                  f"{verification['fixed_batch_kl'][-1]:.6g}. This is an optimization check on training images, not a generalization result.")
+                  # Each curve entry is the loss before that update, so the last entry follows len(curve) - 1 updates.
+                  f"Across {len(verification['fixed_batch_kl'])} fixed-batch updates, the recorded pre-update KL fell from "
+                  f"{verification['fixed_batch_kl'][0]:.6g} (initial model) to {verification['fixed_batch_kl'][-1]:.6g} "
+                  f"(after {len(verification['fixed_batch_kl']) - 1} updates). This is an optimization check on training images, not a generalization result.")
     if evidence.get("audit"):
         paragraph(escape(evidence["audit"]["execution_summary"]))
     if not evidence["runs"]:
@@ -185,15 +190,16 @@ def write_paper(destination, evidence):
               "Original photos, raw activation caches and gated backbone weights are excluded. Local checkpoints preserve optimizer and RNG state. "
               + ("No completed main-study bundle is eligible for publication in this failed allocation." if not evidence["runs"] else ""))
     heading("AI statement")
-    paragraph("Codex wrote this codebase and paper. Human cleanup and rewriting are in progress. A human provided the exact specification that Codex executed.", "Small")
+    paragraph("Codex wrote the original codebase and paper. Claude Code performed the 2026-11-22 independent audit and its corrections. "
+              "Human cleanup and rewriting are in progress. A human provided the exact specification that the agents executed.", "Small")
 
     def footer(canvas, document):
         """Stable page labels make exported results referenceable."""
         canvas.setFont("Helvetica", 8)
-        canvas.drawString(50, 25, "Libor Burian | Downstream reconstruction and sparsity")
+        canvas.drawString(50, 25, f"{AUTHOR} | Downstream reconstruction and sparsity")
         canvas.drawRightString(562, 25, str(document.page))
 
     document = SimpleDocTemplate(str(destination / "paper.pdf"), pagesize=(612, 792), leftMargin=48, rightMargin=48,
-                                  topMargin=45, bottomMargin=44, author="Libor Burian",
+                                  topMargin=45, bottomMargin=44, author=AUTHOR,
                                   title="Downstream Reconstruction and Sparsity in End-to-End Vision Featurizers")
     document.build(story, onFirstPage=footer, onLaterPages=footer)

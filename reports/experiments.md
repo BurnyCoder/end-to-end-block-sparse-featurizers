@@ -24,8 +24,9 @@ patch reconstruction; this illustrates why both metrics are necessary, without e
 
 On a fixed pair of real training images, the online and cached patch tensors, KL, and BSF gradients
 matched exactly in float32. Identity replacement gave zero KL. Replacing patches with zeros gave
-KL 19.498661, confirming the classifier uses the intervened path. Fifty fixed-batch optimization steps
-reduced KL from 11.633245 to 0.027983; the trajectory was not monotonic. These are implementation checks,
+KL 19.498661, confirming the classifier uses the intervened path. Across 50 fixed-batch optimizer updates,
+the recorded pre-update KL fell from 11.633245 (initial model) to 0.027983 (after 49 updates); the trajectory
+was not monotonic. These are implementation checks,
 not held-out performance claims. Raw measurements are in `outputs/smoke/verification.json`.
 
 Initial cache extraction stopped at image 284 after a Windows sharing violation during atomic JSON
@@ -114,3 +115,16 @@ The subsequent [plan completion audit](../docs/plan-completion.md) maps each req
 It reran all 25 tests and the independent checkpoint/prediction audit, rechecked the public collection,
 and confirmed that the live site's data and PDF match the published artifacts. It also corrects stale
 status wording in the historical pilot record; no experimental outcome or frozen allocation changed.
+
+## Independent scientific audit, 2026-11-22
+
+A read-only audit recomputed every documented number from saved predictions, schedules, pilots and logs,
+compared the featurizer and loss with their pinned upstream sources, and checked every external citation.
+No model was trained or evaluated. All numerical claims matched their artifacts, and the registered
+"inconclusive" verdict is correct. The audit added three qualifications. The main-study seed variance was about
+twice the pilot estimate, so the design was less sensitive than its 77.47% pilot power. The point estimate is below
+the registered 10% minimum effect. The scalar contrast also includes a learning-rate difference. It also measured
+how loosely the random intervention control was energy matched, and found that the follow-up's two-hour preparation
+budget had essentially no slack even without its interruption. See the
+[audit report](reviews/2026-11-22-independent-scientific-audit.md) and its
+[machine-readable record](reviews/2026-11-22-claim-recheck.json).
